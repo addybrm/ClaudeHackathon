@@ -1,0 +1,61 @@
+{
+  "restaurant": {
+    "name": "Cedar & Saffron Kitchen",
+    "type": "Independent Mediterranean restaurant",
+    "currency": "USD",
+    "location": "Fictional - Portland, Oregon"
+  },
+  "suppliers": [
+    {"id": "s1", "name": "Northwest Produce Co.", "contact": "orders@nwproduce.example", "lead_time_days": 2},
+    {"id": "s2", "name": "Cascade Provisions", "contact": "orders@cascadeprovisions.example", "lead_time_days": 3},
+    {"id": "s3", "name": "Willamette Seafood", "contact": "orders@willametteseafood.example", "lead_time_days": 1},
+    {"id": "s4", "name": "Rose City Pantry", "contact": "orders@rosecitypantry.example", "lead_time_days": 4}
+  ],
+  "ingredients": [
+    {"id": "tomato", "name": "Heirloom tomato", "unit": "kg", "supplier_id": "s1", "unit_cost": 4.2},
+    {"id": "burrata", "name": "Burrata", "unit": "each", "supplier_id": "s2", "unit_cost": 3.2},
+    {"id": "olive_oil", "name": "Extra virgin olive oil", "unit": "l", "supplier_id": "s4", "unit_cost": 9.12},
+    {"id": "basil", "name": "Fresh basil", "unit": "kg", "supplier_id": "s1", "unit_cost": 18.0},
+    {"id": "arborio", "name": "Arborio rice", "unit": "kg", "supplier_id": "s4", "unit_cost": 4.0},
+    {"id": "mushroom", "name": "Wild mushrooms", "unit": "kg", "supplier_id": "s1", "unit_cost": 11.0},
+    {"id": "parmesan", "name": "Parmesan", "unit": "kg", "supplier_id": "s2", "unit_cost": 15.0},
+    {"id": "sea_bass", "name": "Sea bass fillet", "unit": "kg", "supplier_id": "s3", "unit_cost": 24.0},
+    {"id": "chicken", "name": "Chicken breast", "unit": "kg", "supplier_id": "s2", "unit_cost": 7.48},
+    {"id": "pasta", "name": "Tagliatelle", "unit": "kg", "supplier_id": "s4", "unit_cost": 5.0},
+    {"id": "truffle", "name": "Truffle paste", "unit": "kg", "supplier_id": "s4", "unit_cost": 42.0},
+    {"id": "lettuce", "name": "Seasonal greens", "unit": "kg", "supplier_id": "s1", "unit_cost": 8.0},
+    {"id": "calamari", "name": "Calamari", "unit": "kg", "supplier_id": "s3", "unit_cost": 13.0},
+    {"id": "potato", "name": "Fingerling potato", "unit": "kg", "supplier_id": "s1", "unit_cost": 3.5},
+    {"id": "chocolate", "name": "Dark chocolate", "unit": "kg", "supplier_id": "s4", "unit_cost": 16.0},
+    {"id": "egg", "name": "Egg", "unit": "each", "supplier_id": "s2", "unit_cost": 0.35},
+    {"id": "cream", "name": "Heavy cream", "unit": "l", "supplier_id": "s2", "unit_cost": 5.0},
+    {"id": "lemon", "name": "Lemon", "unit": "each", "supplier_id": "s1", "unit_cost": 0.55}
+  ],
+  "price_history": [
+    {"ingredient_id": "olive_oil", "effective_date": "2026-01-01", "unit_cost": 8.0, "supplier_id": "s4", "reason": "Starting price"},
+    {"ingredient_id": "olive_oil", "effective_date": "2026-10-01", "unit_cost": 9.12, "supplier_id": "s4", "reason": "Supplier increase", "change_pct": 14.0},
+    {"ingredient_id": "chicken", "effective_date": "2026-01-01", "unit_cost": 6.8, "supplier_id": "s2", "reason": "Starting price"},
+    {"ingredient_id": "chicken", "effective_date": "2026-09-01", "unit_cost": 7.48, "supplier_id": "s2", "reason": "Regional poultry shortage", "change_pct": 10.0},
+    {"ingredient_id": "sea_bass", "effective_date": "2026-06-01", "unit_cost": 22.0, "supplier_id": "s3", "reason": "Starting price"},
+    {"ingredient_id": "sea_bass", "effective_date": "2026-08-01", "unit_cost": 24.0, "supplier_id": "s3", "reason": "Seasonal catch change", "change_pct": 9.09}
+  ],
+  "dishes": [
+    {"id": "d1", "name": "Burrata & Heirloom Tomato", "category": "Starter", "selling_price": 16.0, "monthly_orders": 186, "ingredients": [{"ingredient_id": "burrata", "quantity": 1}, {"ingredient_id": "tomato", "quantity": 0.18}, {"ingredient_id": "basil", "quantity": 0.01}, {"ingredient_id": "olive_oil", "quantity": 0.01}]},
+    {"id": "d2", "name": "Wild Mushroom Risotto", "category": "Main", "selling_price": 24.0, "monthly_orders": 142, "ingredients": [{"ingredient_id": "arborio", "quantity": 0.09}, {"ingredient_id": "mushroom", "quantity": 0.12}, {"ingredient_id": "parmesan", "quantity": 0.025}, {"ingredient_id": "olive_oil", "quantity": 0.015}]},
+    {"id": "d3", "name": "Pan-Seared Sea Bass", "category": "Main", "selling_price": 32.0, "monthly_orders": 98, "ingredients": [{"ingredient_id": "sea_bass", "quantity": 0.18}, {"ingredient_id": "potato", "quantity": 0.15}, {"ingredient_id": "lemon", "quantity": 0.5}, {"ingredient_id": "olive_oil", "quantity": 0.015}]},
+    {"id": "d4", "name": "Truffle Tagliatelle", "category": "Main", "selling_price": 26.0, "monthly_orders": 164, "ingredients": [{"ingredient_id": "pasta", "quantity": 0.12}, {"ingredient_id": "truffle", "quantity": 0.012}, {"ingredient_id": "parmesan", "quantity": 0.02}, {"ingredient_id": "cream", "quantity": 0.04}]},
+    {"id": "d5", "name": "Heritage Chicken", "category": "Main", "selling_price": 28.0, "monthly_orders": 87, "ingredients": [{"ingredient_id": "chicken", "quantity": 0.22}, {"ingredient_id": "potato", "quantity": 0.16}, {"ingredient_id": "olive_oil", "quantity": 0.02}, {"ingredient_id": "lemon", "quantity": 0.5}]},
+    {"id": "d6", "name": "Chocolate Fondant", "category": "Dessert", "selling_price": 12.0, "monthly_orders": 121, "ingredients": [{"ingredient_id": "chocolate", "quantity": 0.06}, {"ingredient_id": "egg", "quantity": 1}, {"ingredient_id": "cream", "quantity": 0.02}]},
+    {"id": "d7", "name": "Seasonal Leaf Salad", "category": "Starter", "selling_price": 14.0, "monthly_orders": 73, "ingredients": [{"ingredient_id": "lettuce", "quantity": 0.12}, {"ingredient_id": "tomato", "quantity": 0.08}, {"ingredient_id": "olive_oil", "quantity": 0.015}, {"ingredient_id": "lemon", "quantity": 0.25}]},
+    {"id": "d8", "name": "Crispy Calamari", "category": "Starter", "selling_price": 17.0, "monthly_orders": 115, "ingredients": [{"ingredient_id": "calamari", "quantity": 0.2}, {"ingredient_id": "lemon", "quantity": 0.5}, {"ingredient_id": "olive_oil", "quantity": 0.02}]},
+    {"id": "d9", "name": "Rosemary Potato Plate", "category": "Side", "selling_price": 9.0, "monthly_orders": 64, "ingredients": [{"ingredient_id": "potato", "quantity": 0.25}, {"ingredient_id": "olive_oil", "quantity": 0.02}, {"ingredient_id": "lemon", "quantity": 0.25}]},
+    {"id": "d10", "name": "Basil Cream Pasta", "category": "Main", "selling_price": 19.0, "monthly_orders": 91, "ingredients": [{"ingredient_id": "pasta", "quantity": 0.12}, {"ingredient_id": "basil", "quantity": 0.015}, {"ingredient_id": "cream", "quantity": 0.05}, {"ingredient_id": "parmesan", "quantity": 0.02}]}
+  ],
+  "waste_records": [
+    {"date": "2026-10-03", "ingredient_id": "tomato", "quantity": 1.2, "unit": "kg", "reason": "Overripe", "cost": 5.04},
+    {"date": "2026-10-07", "ingredient_id": "lettuce", "quantity": 0.8, "unit": "kg", "reason": "Wilting", "cost": 6.4},
+    {"date": "2026-10-12", "ingredient_id": "sea_bass", "quantity": 0.35, "unit": "kg", "reason": "Prep trim", "cost": 8.4},
+    {"date": "2026-10-18", "ingredient_id": "olive_oil", "quantity": 0.25, "unit": "l", "reason": "Spill", "cost": 2.28},
+    {"date": "2026-10-24", "ingredient_id": "chicken", "quantity": 0.6, "unit": "kg", "reason": "Past use-by date", "cost": 4.49}
+  ]
+}

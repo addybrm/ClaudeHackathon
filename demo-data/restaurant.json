@@ -1,0 +1,69 @@
+{
+  "restaurant": {
+    "name": "The North Star Kitchen",
+    "description": "Fictional independent North East British restaurant",
+    "city": "Newcastle upon Tyne",
+    "currency": "GBP",
+    "period": "October 2026"
+  },
+  "suppliers": [
+    {"id": "north_farm", "name": "North Farm Produce", "region": "Northumberland", "lead_time_days": 2},
+    {"id": "tyne_provisions", "name": "Tyne Valley Provisions", "region": "Tyne and Wear", "lead_time_days": 3},
+    {"id": "coast_catch", "name": "Coast & Catch Seafood", "region": "North East coast", "lead_time_days": 1}
+  ],
+  "ingredients": [
+    {"id": "chicken", "name": "Free-range chicken", "unit": "kg", "supplier_id": "tyne_provisions", "previous_unit_price": 10.00, "current_unit_price": 11.80},
+    {"id": "beef", "name": "North East beef", "unit": "kg", "supplier_id": "tyne_provisions", "previous_unit_price": 14.00, "current_unit_price": 15.50},
+    {"id": "salmon", "name": "North Sea salmon", "unit": "kg", "supplier_id": "coast_catch", "previous_unit_price": 17.00, "current_unit_price": 18.00},
+    {"id": "cod", "name": "Cod fillet", "unit": "kg", "supplier_id": "coast_catch", "previous_unit_price": 11.50, "current_unit_price": 12.00},
+    {"id": "shrimp", "name": "North Sea shrimp", "unit": "kg", "supplier_id": "coast_catch", "previous_unit_price": 15.00, "current_unit_price": 16.00},
+    {"id": "potato", "name": "Yetholm potatoes", "unit": "kg", "supplier_id": "north_farm", "previous_unit_price": 2.00, "current_unit_price": 2.20},
+    {"id": "tomato", "name": "Tomatoes", "unit": "kg", "supplier_id": "north_farm", "previous_unit_price": 2.80, "current_unit_price": 3.40},
+    {"id": "carrot", "name": "Carrots", "unit": "kg", "supplier_id": "north_farm", "previous_unit_price": 1.50, "current_unit_price": 1.70},
+    {"id": "lettuce", "name": "Leaf lettuce", "unit": "kg", "supplier_id": "north_farm", "previous_unit_price": 4.50, "current_unit_price": 4.80},
+    {"id": "onion", "name": "Brown onion", "unit": "kg", "supplier_id": "north_farm", "previous_unit_price": 1.60, "current_unit_price": 1.80},
+    {"id": "garlic", "name": "Garlic", "unit": "kg", "supplier_id": "north_farm", "previous_unit_price": 7.50, "current_unit_price": 8.00},
+    {"id": "olive_oil", "name": "Extra virgin olive oil", "unit": "l", "supplier_id": "tyne_provisions", "previous_unit_price": 9.00, "current_unit_price": 9.50},
+    {"id": "rice", "name": "Basmati rice", "unit": "kg", "supplier_id": "tyne_provisions", "previous_unit_price": 2.70, "current_unit_price": 2.80},
+    {"id": "flour", "name": "Plain flour", "unit": "kg", "supplier_id": "tyne_provisions", "previous_unit_price": 1.30, "current_unit_price": 1.40},
+    {"id": "cream", "name": "Double cream", "unit": "l", "supplier_id": "tyne_provisions", "previous_unit_price": 5.00, "current_unit_price": 5.20},
+    {"id": "cheddar", "name": "Mature cheddar", "unit": "kg", "supplier_id": "tyne_provisions", "previous_unit_price": 9.00, "current_unit_price": 9.50},
+    {"id": "egg", "name": "Free-range egg", "unit": "each", "supplier_id": "north_farm", "previous_unit_price": 0.32, "current_unit_price": 0.35},
+    {"id": "mushroom", "name": "Chestnut mushrooms", "unit": "kg", "supplier_id": "north_farm", "previous_unit_price": 7.00, "current_unit_price": 7.50},
+    {"id": "lemon", "name": "Lemon", "unit": "each", "supplier_id": "north_farm", "previous_unit_price": 0.55, "current_unit_price": 0.60},
+    {"id": "herbs", "name": "Fresh herbs", "unit": "kg", "supplier_id": "north_farm", "previous_unit_price": 16.00, "current_unit_price": 18.00},
+    {"id": "bread", "name": "Sourdough bread", "unit": "loaf", "supplier_id": "tyne_provisions", "previous_unit_price": 2.30, "current_unit_price": 2.50}
+  ],
+  "dishes": [
+    {"id": "d01", "name": "Tyne Chicken Roast", "category": "Mains", "selling_price": 21.00, "weekly_units_sold": 82, "recipe": {"chicken": 0.22, "potato": 0.18, "onion": 0.05, "herbs": 0.005}},
+    {"id": "d02", "name": "Chicken & Leek Pie", "category": "Mains", "selling_price": 18.00, "weekly_units_sold": 64, "recipe": {"chicken": 0.18, "flour": 0.08, "cream": 0.04, "onion": 0.05, "egg": 0.2}},
+    {"id": "d03", "name": "Beef & Ale Stew", "category": "Mains", "selling_price": 23.00, "weekly_units_sold": 57, "recipe": {"beef": 0.22, "potato": 0.16, "onion": 0.06, "carrot": 0.08}},
+    {"id": "d04", "name": "North Sea Salmon", "category": "Mains", "selling_price": 26.00, "weekly_units_sold": 48, "recipe": {"salmon": 0.18, "potato": 0.15, "lemon": 0.5, "olive_oil": 0.015, "herbs": 0.004}},
+    {"id": "d05", "name": "Crispy Cod & Chips", "category": "Mains", "selling_price": 19.00, "weekly_units_sold": 76, "recipe": {"cod": 0.18, "potato": 0.25, "flour": 0.04, "lemon": 0.25, "olive_oil": 0.02}},
+    {"id": "d06", "name": "Shrimp Rice Bowl", "category": "Mains", "selling_price": 20.00, "weekly_units_sold": 43, "recipe": {"shrimp": 0.16, "rice": 0.1, "tomato": 0.08, "onion": 0.04, "olive_oil": 0.01}},
+    {"id": "d07", "name": "Mushroom & Cheddar Tart", "category": "Mains", "selling_price": 17.00, "weekly_units_sold": 38, "recipe": {"mushroom": 0.14, "cheddar": 0.05, "flour": 0.07, "cream": 0.03, "egg": 0.3}},
+    {"id": "d08", "name": "Loaded Northumberland Potato", "category": "Mains", "selling_price": 14.00, "weekly_units_sold": 52, "recipe": {"potato": 0.3, "cheddar": 0.06, "cream": 0.03, "herbs": 0.003}},
+    {"id": "d09", "name": "Warm Chicken Salad", "category": "Starters", "selling_price": 15.00, "weekly_units_sold": 45, "recipe": {"chicken": 0.12, "lettuce": 0.08, "tomato": 0.06, "lemon": 0.25, "olive_oil": 0.012}},
+    {"id": "d10", "name": "Smoked Tomato Soup", "category": "Starters", "selling_price": 8.00, "weekly_units_sold": 71, "recipe": {"tomato": 0.16, "onion": 0.05, "cream": 0.02, "bread": 0.25, "herbs": 0.002}},
+    {"id": "d11", "name": "Lemon Curd Pavlova", "category": "Desserts", "selling_price": 9.00, "weekly_units_sold": 34, "recipe": {"egg": 2, "cream": 0.04, "lemon": 0.5, "flour": 0.01}},
+    {"id": "d12", "name": "Cheddar Rarebit", "category": "Starters", "selling_price": 10.00, "weekly_units_sold": 39, "recipe": {"bread": 0.5, "cheddar": 0.08, "cream": 0.02, "egg": 0.2, "herbs": 0.001}}
+  ],
+  "waste_records": [
+    {"id": "w01", "date": "2026-10-04", "ingredient_id": "chicken", "quantity": 0.45, "reason": "Missed prep forecast"},
+    {"id": "w02", "date": "2026-10-09", "ingredient_id": "lettuce", "quantity": 0.70, "reason": "Wilting"},
+    {"id": "w03", "date": "2026-10-15", "ingredient_id": "salmon", "quantity": 0.22, "reason": "Trim and spoilage"},
+    {"id": "w04", "date": "2026-10-21", "ingredient_id": "bread", "quantity": 3, "reason": "Past best-before"},
+    {"id": "w05", "date": "2026-10-28", "ingredient_id": "tomato", "quantity": 0.90, "reason": "Overripe"}
+  ],
+  "revenue_cost_history": [
+    {"period": "2026-07", "revenue": 28740.00, "food_cost": 8234.00},
+    {"period": "2026-08", "revenue": 30120.00, "food_cost": 8945.00},
+    {"period": "2026-09", "revenue": 31580.00, "food_cost": 9789.00},
+    {"period": "2026-10", "revenue": 32640.00, "food_cost": 10572.00}
+  ],
+  "profitability_alerts": [
+    {"id": "a01", "severity": "high", "type": "supplier_price_increase", "title": "Chicken price up 18%", "ingredient_id": "chicken"},
+    {"id": "a02", "severity": "medium", "type": "low_margin_dish", "title": "Chicken & Leek Pie needs review", "dish_id": "d02"},
+    {"id": "a03", "severity": "medium", "type": "waste_spike", "title": "Chicken waste exceeded £5 this month", "ingredient_id": "chicken"}
+  ]
+}
