@@ -44,11 +44,11 @@ export function Sidebar({ business, isDemo, aiLive }: { business: string | null;
       <div className="space-y-2 border-t border-line p-3 text-[12px]">
         <div className="flex items-center justify-between gap-2">
           <span className="truncate text-ink">{business ?? "No business"}</span>
-          {isDemo && <span className="rounded border border-[color:var(--warn)]/35 px-1 text-[10px] font-semibold text-warn">DEMO</span>}
+          {isDemo && <span title="Sample restaurant with generated figures, not a real business" className="rounded border border-line-strong px-1.5 text-[10px] font-medium text-muted">Sample data</span>}
         </div>
-        <div className="flex items-center gap-1.5 text-muted" title={aiLive ? "ANTHROPIC_API_KEY configured — investigations use Claude with tool calling" : "No ANTHROPIC_API_KEY — investigator runs deterministic demo mode"}>
+        <div className="flex items-center gap-1.5 text-muted" title={aiLive ? "Investigations use Claude with tool calling" : "No ANTHROPIC_API_KEY set. Investigations use rule-based offline analysis, not AI."}>
           <span className="size-1.5 rounded-full" style={{ background: aiLive ? "var(--good)" : "var(--warn)" }} />
-          {aiLive ? "Claude connected" : "AI demo mode (no API key)"}
+          {aiLive ? "Claude connected" : "Claude offline"}
         </div>
       </div>
     </aside>

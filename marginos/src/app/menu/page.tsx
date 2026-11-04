@@ -37,7 +37,7 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
     <>
       <PageHeader
         title="Menu analysis"
-        description="What each dish actually earns after ingredients, packaging, platform commission and discounts. Recipe costs use supplier invoice prices for the month."
+        description="Contribution per dish after ingredients, packaging, commission and discounts."
         actions={<PeriodPicker value={key} available={available} compareLabel={prev.label} />}
       />
 
@@ -56,7 +56,7 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
       </div>
 
       <div className="space-y-5">
-        <Panel pad={false} title={`${channelLabel[channel]} · ${res.period.label}`} subtitle="Per-unit figures are ex VAT. Click a dish for its recipe costing and price scenarios.">
+        <Panel pad={false} title={`${channelLabel[channel]} · ${res.period.label}`} subtitle="Per unit, ex VAT">
           <div className="overflow-x-auto">
             <table className="tbl num">
               <thead>
@@ -137,14 +137,6 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
               </ul>
             </Panel>
           )}
-          <Panel title="How these numbers are built">
-            <ul className="space-y-1.5 text-[12px] text-muted">
-              <li><span className="text-ink-2">Ingredients</span>: recipe quantity × weighted average invoice price for the month (falls back to the last invoice, then an estimated standard cost).</li>
-              <li><span className="text-ink-2">Commission</span>: platform settlement, allocated to dishes by share of order value; estimated from the contract rate where no settlement exists.</li>
-              <li><span className="text-ink-2">Packaging</span>: per-dish estimate entered on the menu; collection and delivery only.</li>
-              <li><span className="text-ink-2">Contribution</span> = net revenue − ingredients − packaging − commission. Not net profit.</li>
-            </ul>
-          </Panel>
           </div>
         </div>
       </div>

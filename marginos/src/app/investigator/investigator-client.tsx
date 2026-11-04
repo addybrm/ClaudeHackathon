@@ -54,7 +54,7 @@ const TOOL_LABEL: Record<string, string> = {
 };
 
 const SUGGESTIONS = [
-  "My revenue increased this month, but my profitability declined. What happened?",
+  "Revenue is up but profit is down. Why?",
   "Which dishes are costing me the most?",
   "Which supplier increased prices the most?",
   "Am I making more money from delivery or dine-in?",
@@ -142,26 +142,13 @@ export function Investigator({ periodKey, live, model, history, saved, autoQuest
   return (
     <div className="grid gap-5 lg:grid-cols-[260px_minmax(0,1fr)]">
       <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start">
-        <div className="rounded-md border border-line bg-surface p-3">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-[12px] font-medium text-ink">Mode</span>
-            {live ? <Badge tone="good">Live · Claude</Badge> : <Badge tone="warn">Demo mode · not AI</Badge>}
-          </div>
-          <p className="text-[12px] text-muted">{live ? `Model ${model}. Claude chooses which of 8 financial tools to call; calculations run in MarginOS.` : "Add ANTHROPIC_API_KEY to .env.local and restart to enable Claude. Demo mode uses keyword rules and the same tools."}</p>
-        </div>
-        <div>
-          <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.06em] text-muted">Ask about</div>
-          <div className="space-y-1">
-            {SUGGESTIONS.map((s) => (
-              <button key={s} disabled={running} onClick={() => ask(s)} className="block w-full rounded px-2 py-1.5 text-left text-[12px] text-ink-2 hover:bg-surface-2 hover:text-ink disabled:opacity-50">
-                {s}
-              </button>
-            ))}
-          </div>
+        <div className="flex items-center gap-2 text-[12px] text-muted" title={live ? `Claude (${model}) calls MarginOS's finance tools; all figures are calculated, not generated.` : "No API key set: rule-based offline analysis using the same finance tools. Not AI."}>
+          <span className="size-1.5 rounded-full" style={{ background: live ? "var(--good)" : "var(--faint)" }} />
+          {live ? "Claude" : "Offline analysis (rule-based)"}
         </div>
         {history.length > 0 && (
           <div>
-            <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.06em] text-muted">Past investigations</div>
+            <div className="mb-2 text-[12px] font-medium text-ink-2">Recent</div>
             <ul className="space-y-0.5">
               {history.map((h) => (
                 <li key={h.id}>
@@ -169,7 +156,7 @@ export function Investigator({ periodKey, live, model, history, saved, autoQuest
                     <span className="line-clamp-1">{h.question}</span>
                     <span className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted">
                       {new Date(h.created_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-                      <span>· {h.mode === "live" ? "Claude" : "demo"}</span>
+                      <span>· {h.mode === "live" ? "Claude" : "offline"}</span>
                       {h.status === "failed" && <span className="text-bad">· failed</span>}
                     </span>
                   </Link>
@@ -182,10 +169,13 @@ export function Investigator({ periodKey, live, model, history, saved, autoQuest
 
       <div className="min-w-0">
         {turns.length === 0 && (
-          <div className="mb-5 rounded-md border border-line bg-surface px-6 py-8">
-            <div className="text-[15px] font-medium text-ink">Ask a question about your restaurant&apos;s money.</div>
-            <p className="mt-1 max-w-xl text-[13px] text-muted">The investigator pulls sales, recipes, supplier invoices, delivery settlements, waste and rota data, then shows what changed, the evidence, how confident it is, and what to do next.</p>
-            <div className="mt-4"><Button variant="primary" onClick={() => ask(SUGGESTIONS[0])}>Why did profitability decline?</Button></div>
+          <div className="pb-2 pt-10">
+            <div className="text-[22px] font-semibold tracking-[-0.02em] text-ink">What do you want to know?</div>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {SUGGESTIONS.slice(0, 6).map((s) => (
+                <button key={s} disabled={running} onClick={() => ask(s)} className="rounded-full border border-line-strong bg-surface px-3 py-1.5 text-[12px] text-ink-2 hover:border-[#4a4a45] hover:text-ink disabled:opacity-50">{s}</button>
+              ))}
+            </div>
           </div>
         )}
         <div className="space-y-6">
@@ -202,13 +192,12 @@ export function Investigator({ periodKey, live, model, history, saved, autoQuest
               value={q}
               onChange={(e) => setQ(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (q.trim().length >= 3 && !running) ask(q.trim()); } }}
-              placeholder="e.g. Why is delivery less profitable than last month?"
+              placeholder="Ask about margins, suppliers, dishes, delivery, waste…"
               className="min-h-[40px] flex-1 resize-none bg-transparent px-1 text-[13px] text-ink outline-none placeholder:text-faint"
               aria-label="Question"
             />
             <Button type="submit" variant="primary" disabled={running || q.trim().length < 3}>{running ? "Investigating…" : "Investigate"}</Button>
           </div>
-          <p className="mt-1.5 text-[11px] text-faint">Contribution is not net profit: rent, utilities and other overheads aren&apos;t in the data. Correlations are labelled as such.</p>
         </form>
       </div>
     </div>
@@ -224,7 +213,7 @@ function TurnView({ t }: { t: Turn }) {
         <h3 className="text-[15px] font-medium text-ink">{t.question}</h3>
         <div className="flex shrink-0 items-center gap-1.5">
           {t.mode === "live" && <Badge tone="good">Claude{t.model ? ` · ${t.model}` : ""}</Badge>}
-          {t.mode === "demo" && <Badge tone="warn" title="Deterministic rules, not AI">Demo mode · not AI</Badge>}
+          {t.mode === "demo" && <Badge title="Rule-based offline analysis using the same finance tools. Not AI.">Offline analysis</Badge>}
           {t.durationMs !== null && <span className="text-[11px] text-muted">{(t.durationMs / 1000).toFixed(1)}s</span>}
         </div>
       </div>

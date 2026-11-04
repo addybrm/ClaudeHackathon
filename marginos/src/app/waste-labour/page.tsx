@@ -30,7 +30,7 @@ export default async function WasteLabourPage({ searchParams }: { searchParams: 
 
   return (
     <>
-      <PageHeader title="Waste & labour" description="Recorded food waste priced at this month's ingredient costs, and wage cost against revenue. Only recorded data is shown; nothing is inferred." actions={<PeriodPicker value={key} available={available} compareLabel={prev.label} />} />
+      <PageHeader title="Waste & labour" description="Recorded waste and wage cost against revenue." actions={<PeriodPicker value={key} available={available} compareLabel={prev.label} />} />
 
       <h2 className="mb-2 text-[13px] font-medium text-ink-2">Food waste</h2>
       {wc.records === 0 ? (

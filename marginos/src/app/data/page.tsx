@@ -42,7 +42,7 @@ export default async function DataCentre() {
 
   return (
     <>
-      <PageHeader title="Data centre" description="Every figure in MarginOS traces back to a file here. Imports are staged and validated first; nothing reaches your financial records until you confirm it." />
+      <PageHeader title="Data centre" description="Import and review the files behind every figure." />
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {SOURCES.map((s) => {

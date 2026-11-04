@@ -59,7 +59,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
     <>
       <PageHeader
         title="Overview"
-        description={<>How {b.name} performed in <span className="text-ink-2">{cur.label}</span>, and what needs your attention. Figures are ex VAT.</>}
+        description={<>{b.name} · {cur.label} · ex VAT</>}
         actions={<PeriodPicker value={key} available={available} compareLabel={hasPrev ? prev.label : undefined} />}
       />
 
@@ -83,7 +83,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
           {hasPrev && (
             <Panel
               title="What changed in contribution"
-              subtitle={`${prev.label} → ${cur.label}. Effects are additive and do not overlap; hover for the basis of each.`}
+              subtitle={`${prev.short} → ${cur.short}`}
               actions={<Button href={`/investigator?period=${key}&q=revenue`} size="sm" variant="primary">Investigate why</Button>}
             >
               <Waterfall
@@ -98,7 +98,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
           <Panel title="Net revenue by day" subtitle={`Ex VAT, after discounts and refunds${health.sales.latest && health.sales.latest.slice(0, 10) < cur.end && new Date(health.sales.latest).getTime() < Date.parse(cur.end) - 86400000 ? ` · sales imported to ${dateLong(health.sales.latest)}` : ""}`}>
             <LineCompare current={trimToData(dc, health.sales.latest).map((d) => ({ day: d.day, value: d.revenue }))} previous={dp.map((d) => ({ day: d.day, value: d.revenue }))} currentLabel={cur.label} previousLabel={prev.label} />
           </Panel>
-          <Panel title="Channels" subtitle="Contribution after discounts, platform commission, packaging and food cost" pad={false} actions={<Link href={`/menu?period=${key}&channel=delivery`} className="text-[12px] text-ink-2 hover:text-ink">Delivery dishes →</Link>}>
+          <Panel title="Channels" pad={false} actions={<Link href={`/menu?period=${key}&channel=delivery`} className="text-[12px] text-ink-2 hover:text-ink">Delivery dishes →</Link>}>
             <table className="tbl num">
               <thead>
                 <tr><th>Channel</th><th className="r">Orders</th><th className="r">Net revenue</th><th className="r">Discounts</th><th className="r">Commission</th><th className="r">Contribution</th><th className="r">Margin</th><th className="r">vs {prev.short}</th></tr>
@@ -125,7 +125,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
         </div>
 
         <div className="space-y-5">
-          <Panel title="Needs attention" subtitle="Rules over your data, not AI">
+          <Panel title="Needs attention">
             {alerts.length === 0 ? (
               <p className="text-[12px] text-muted">Nothing unusual against {prev.label}.</p>
             ) : (
@@ -157,7 +157,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
                     <Link href={`/investigator?id=${r.id}`} className="block hover:text-ink">
                       <div className="flex items-center gap-2 text-[12px] text-muted">
                         {dateTime(r.created_at)}
-                        <Badge tone={r.mode === "live" ? "good" : "warn"}>{r.mode === "live" ? "Claude" : "Demo mode"}</Badge>
+                        <Badge tone={r.mode === "live" ? "good" : "neutral"}>{r.mode === "live" ? "Claude" : "Offline"}</Badge>
                         {r.status === "failed" && <Badge tone="bad">failed</Badge>}
                       </div>
                       <div className="mt-0.5 truncate text-[13px] text-ink">{r.question}</div>
@@ -169,7 +169,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
             )}
           </Panel>
 
-          <Panel title="Data freshness" subtitle="What the figures above are built from" actions={<Link href="/data" className="text-[12px] text-ink-2 hover:text-ink">Data centre →</Link>}>
+          <Panel title="Data sources" actions={<Link href="/data" className="text-[12px] text-ink-2 hover:text-ink">Data centre →</Link>}>
             <ul className="space-y-2 text-[12px]">
               <Fresh label="POS sales" ok={health.sales.count > 0} detail={health.sales.count ? `${health.sales.count.toLocaleString("en-GB")} orders · latest ${dateLong(health.sales.latest)}` : "none"} />
               <Fresh label="Supplier invoices" ok={health.invoices.count > 0} detail={health.invoices.count ? `${health.invoices.count} invoices · latest ${dateLong(health.invoices.latest)}` : "none"} />

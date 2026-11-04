@@ -4,7 +4,6 @@ import "./globals.css";
 import { getActiveBusiness } from "@/lib/business";
 import { liveAiAvailable } from "@/lib/ai/config";
 import { MobileNav, Sidebar } from "@/components/shell";
-import { DemoBanner } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "MarginOS · Restaurant profit intelligence",
@@ -23,7 +22,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <Sidebar business={b?.name ?? null} isDemo={!!b?.isDemo} aiLive={liveAiAvailable()} />
           </Suspense>
           <div className="min-w-0 flex-1">
-            {b?.isDemo && <DemoBanner />}
             <Suspense>
               <MobileNav />
             </Suspense>

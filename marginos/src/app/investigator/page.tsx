@@ -25,8 +25,8 @@ export default async function InvestigatorPage({ searchParams }: { searchParams:
   return (
     <>
       <PageHeader
-        title="AI Investigator"
-        description={live ? <>Claude ({MODEL}) investigates by calling MarginOS&apos;s financial tools. Every figure comes from a deterministic calculation; the trace shows each call.</> : <>No <code className="text-ink-2">ANTHROPIC_API_KEY</code> is configured, so this runs in <strong className="text-warn">demo mode</strong>: fixed rules choose the tools and fill a template. It is not live AI.</>}
+        title="Investigator"
+        description="Ask about your numbers. Every answer shows its working."
         actions={<PeriodPicker value={key} available={available} compareLabel={previousPeriod(key).label} />}
       />
       <Investigator

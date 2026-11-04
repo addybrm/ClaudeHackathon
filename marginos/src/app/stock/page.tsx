@@ -19,7 +19,7 @@ export default async function StockPage() {
     <>
       <PageHeader
         title="Stock & expiry"
-        description={<>What&apos;s likely in the kitchen as of <span className="text-ink-2">{dateLong(s.asOf)}</span> (the latest sales day), and what is likely to go off before it&apos;s used. Modelled from deliveries, use-by dates and recipe usage. This is a prediction, not a stock count.</>}
+        description={<>Forecast as of {dateLong(s.asOf)} · modelled from deliveries and recipe usage</>}
       />
       <StatRow cols={4}>
         <Stat label="Stock on hand (modelled)" value={gbp(s.totals.stockValue)} sub="at invoice cost" />
@@ -88,16 +88,6 @@ export default async function StockPage() {
             </tbody>
           </table>
         </div>
-      </Panel>
-
-      <Panel className="mt-5" title="Where the model can be wrong">
-        <ul className="space-y-1.5 text-[12px] text-muted">
-          <li>· Usage is an average of the last 28 days. Busier weekends and specials aren&apos;t modelled day by day.</li>
-          <li>· Recorded waste isn&apos;t subtracted from stock. Compare the modelled figure with your waste log instead.</li>
-          <li>· Shelf lives are typical values per ingredient. Use-by dates printed on receipts are used whenever Claude picked them up.</li>
-          <li>· A stock-take would correct the model. <Link href="/investigator?ask=Which%20stock%20is%20likely%20to%20go%20off%20before%20we%20use%20it%3F" className="text-ink-2 underline decoration-line-strong underline-offset-2">Ask the investigator about stock →</Link></li>
-        </ul>
-        <p className="mt-3 text-[11px] text-faint">Forecast method adapted from the LarderCheck prototype.</p>
       </Panel>
     </>
   );

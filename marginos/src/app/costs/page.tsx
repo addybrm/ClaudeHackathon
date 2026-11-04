@@ -49,7 +49,7 @@ export default async function CostsPage({ searchParams }: { searchParams: Promis
     <>
       <PageHeader
         title="Cost intelligence"
-        description="Supplier price movements, and what they cost you at the quantities your recipes actually use. Prices are weighted averages of invoice lines in each month, ex VAT."
+        description="Supplier prices, billing checks and their effect on margin."
         actions={<PeriodPicker value={key} available={available} compareLabel={prev.label} />}
       />
       <StatRow cols={4}>
