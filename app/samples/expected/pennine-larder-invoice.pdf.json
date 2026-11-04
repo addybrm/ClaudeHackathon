@@ -1,0 +1,59 @@
+{
+  "isReceipt": true,
+  "supplier": "Pennine Larder Dry Goods",
+  "orderRef": "PL-0558",
+  "receiptDate": "2026-11-01",
+  "currency": "GBP",
+  "total": 158.2,
+  "items": [
+    {
+      "rawName": "Plain flour 16kg sack",
+      "ingredient": "Plain flour",
+      "category": "dry",
+      "quantity": 32,
+      "unit": "kg",
+      "unitPrice": 0.75,
+      "lineTotal": 24.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": "Converted 2 sack to 32 kg"
+    },
+    {
+      "rawName": "Arborio rice 5kg",
+      "ingredient": "Arborio rice",
+      "category": "dry",
+      "quantity": 10,
+      "unit": "kg",
+      "unitPrice": 2.4,
+      "lineTotal": 24.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": "Converted 2 bag to 10 kg"
+    },
+    {
+      "rawName": "Extra virgin olive oil 5L",
+      "ingredient": "Extra virgin olive oil",
+      "category": "dry",
+      "quantity": 10,
+      "unit": "l",
+      "unitPrice": 7.9,
+      "lineTotal": 79.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": "Converted 2 tin to 10 l"
+    },
+    {
+      "rawName": "Chopped tomatoes 400g",
+      "ingredient": "Tinned chopped tomatoes",
+      "category": "dry",
+      "quantity": 48,
+      "unit": "each",
+      "unitPrice": 0.65,
+      "lineTotal": 31.2,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    }
+  ],
+  "warnings": []
+}

@@ -1,0 +1,71 @@
+{
+  "isReceipt": true,
+  "supplier": "Brackenfield Dairy",
+  "orderRef": "BFD-48211",
+  "receiptDate": "2026-11-02",
+  "currency": "GBP",
+  "total": 236.4,
+  "items": [
+    {
+      "rawName": "WHOLE MILK 1L",
+      "ingredient": "Whole milk",
+      "category": "dairy",
+      "quantity": 40,
+      "unit": "l",
+      "unitPrice": 0.95,
+      "lineTotal": 38.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "DBL CREAM 1L",
+      "ingredient": "Double cream",
+      "category": "dairy",
+      "quantity": 8,
+      "unit": "l",
+      "unitPrice": 3.2,
+      "lineTotal": 25.6,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "UNSALTED BUTTER",
+      "ingredient": "Unsalted butter",
+      "category": "dairy",
+      "quantity": 5,
+      "unit": "kg",
+      "unitPrice": 6.8,
+      "lineTotal": 34.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "FR RANGE EGGS LGE (TRAY 30)",
+      "ingredient": "Free-range eggs",
+      "category": "dairy",
+      "quantity": 360,
+      "unit": "each",
+      "unitPrice": 0.28,
+      "lineTotal": 100.8,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": "Converted 12 tray to 360 each"
+    },
+    {
+      "rawName": "MATURE CHEDDAR BLOCK",
+      "ingredient": "Mature cheddar",
+      "category": "dairy",
+      "quantity": 4,
+      "unit": "kg",
+      "unitPrice": 9.5,
+      "lineTotal": 38.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    }
+  ],
+  "warnings": []
+}

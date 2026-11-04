@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LarderCheck</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">LC</div>
+        <div>
+          <h1>LarderCheck</h1>
+          <p id="subtitle">Loading…</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span id="ai-pill" class="pill"></span>
+        <a class="btn" href="/inbox.html" target="larder-inbox" rel="noopener">Open supplier inbox ↗</a>
+      </div>
+    </header>
+
+    <div id="banner" class="banner" hidden></div>
+
+    <section class="tiles" aria-label="Summary">
+      <div class="tile"><div class="label">Stock on hand (est.)</div><div class="value" id="t-stock">£0</div><div class="sub" id="t-stock-sub">&nbsp;</div></div>
+      <div class="tile"><div class="label">On its way</div><div class="value" id="t-incoming">£0</div><div class="sub" id="t-incoming-sub">&nbsp;</div></div>
+      <div class="tile" id="tile-waste"><div class="label">Projected waste</div><div class="value" id="t-waste">£0</div><div class="sub" id="t-waste-sub">&nbsp;</div></div>
+      <div class="tile" id="tile-review"><div class="label">Lines to check</div><div class="value" id="t-review">0</div><div class="sub">Receipt doesn't match the email</div></div>
+    </section>
+
+    <div class="grid-2">
+      <section class="card" aria-labelledby="add-h">
+        <div class="card-head">
+          <div><h2 id="add-h">Add receipts</h2><p>Photos or PDFs of delivery notes and invoices</p></div>
+        </div>
+        <label class="drop" id="drop">
+          <input type="file" id="file" accept="image/jpeg,image/png,image/webp,application/pdf" multiple>
+          <strong>Drop receipts here or tap to choose</strong>
+          <span>JPEG, PNG, WebP or PDF, up to 10 at a time</span>
+        </label>
+        <div class="progress" id="progress" aria-live="polite"></div>
+        <div class="samples">
+          <h3>Sample receipts (fictional) <button class="btn small" id="all-samples">Add all</button></h3>
+          <ul class="sample-list" id="samples"></ul>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="rec-h">
+        <div class="card-head">
+          <div><h2 id="rec-h">Receipts checked against emails</h2><p>Each receipt is matched to the supplier's confirmation email</p></div>
+        </div>
+        <div class="receipts" id="receipts"></div>
+      </section>
+    </div>
+
+    <section class="card" aria-labelledby="inv-h">
+      <div class="card-head">
+        <div><h2 id="inv-h">Stock list</h2><p>Every ingredient bought or on its way, with where it's kept and how much should get used before it expires</p></div>
+        <div class="filters">
+          <input type="search" id="f-search" placeholder="Search ingredients" aria-label="Search ingredients">
+          <select id="f-storage" aria-label="Storage"><option value="">All storage</option></select>
+          <select id="f-status" aria-label="Status">
+            <option value="">All stock</option>
+            <option value="in_stock">In stock</option>
+            <option value="incoming">On its way</option>
+            <option value="risk">At risk of waste</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Ingredient</th>
+              <th>Status</th>
+              <th class="num">Bought</th>
+              <th class="num">Left now</th>
+              <th class="num">Price</th>
+              <th>Arrives</th>
+              <th>Expires</th>
+              <th>Stored in</th>
+              <th class="num">Use / day</th>
+              <th>Used before expiry</th>
+              <th class="num">Waste</th>
+            </tr>
+          </thead>
+          <tbody id="inventory"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="inv-empty" hidden>No stock yet. Add a receipt to start.</div>
+    </section>
+
+    <div class="foot">
+      <span>"Left now" and "Used before expiry" assume the kitchen uses the "Use / day" amount every day, oldest expiry first. Change "Use / day" to match your sales.</span>
+      <button class="btn small ghost" id="reset">Reset demo</button>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

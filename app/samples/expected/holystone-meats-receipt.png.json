@@ -1,0 +1,47 @@
+{
+  "isReceipt": true,
+  "supplier": "Holystone Meats Ltd",
+  "orderRef": "HSM-7730",
+  "receiptDate": "2026-11-03",
+  "currency": "GBP",
+  "total": 131.7,
+  "items": [
+    {
+      "rawName": "CHKN BRST FILLET",
+      "ingredient": "Chicken breast",
+      "category": "meat",
+      "quantity": 10,
+      "unit": "kg",
+      "unitPrice": 7.4,
+      "lineTotal": 74.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "BEEF MINCE 15% FAT",
+      "ingredient": "Beef mince",
+      "category": "meat",
+      "quantity": 5,
+      "unit": "kg",
+      "unitPrice": 6.2,
+      "lineTotal": 31.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "SMKD BACK BACON",
+      "ingredient": "Smoked back bacon",
+      "category": "meat",
+      "quantity": 3,
+      "unit": "kg",
+      "unitPrice": 8.9,
+      "lineTotal": 26.7,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    }
+  ],
+  "warnings": []
+}

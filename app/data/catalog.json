@@ -1,0 +1,38 @@
+{
+  "restaurant": "The Lantern Kitchen",
+  "_comment": "Fictional. dailyUse is the average amount used per day (from past sales); shelfLifeDays is used when the receipt has no printed date. The manager can change dailyUse in the app.",
+  "storageAreas": {
+    "dairy": "Fridge A · Dairy & eggs",
+    "meat": "Fridge B · Meat",
+    "fish": "Fridge C · Fish",
+    "produce": "Fridge D · Produce",
+    "frozen": "Freezer 1",
+    "dry": "Dry store",
+    "other": "Dry store"
+  },
+  "categoryShelfLifeDays": { "dairy": 7, "meat": 4, "fish": 2, "produce": 5, "frozen": 180, "dry": 365, "other": 14 },
+  "ingredients": [
+    { "name": "Whole milk", "category": "dairy", "unit": "l", "dailyUse": 8, "shelfLifeDays": 7 },
+    { "name": "Double cream", "category": "dairy", "unit": "l", "dailyUse": 0.6, "shelfLifeDays": 10 },
+    { "name": "Unsalted butter", "category": "dairy", "unit": "kg", "dailyUse": 0.4, "shelfLifeDays": 30 },
+    { "name": "Free-range eggs", "category": "dairy", "unit": "each", "dailyUse": 30, "shelfLifeDays": 21 },
+    { "name": "Mature cheddar", "category": "dairy", "unit": "kg", "dailyUse": 0.3, "shelfLifeDays": 28 },
+    { "name": "Chicken breast", "category": "meat", "unit": "kg", "dailyUse": 2.2, "shelfLifeDays": 4 },
+    { "name": "Beef mince", "category": "meat", "unit": "kg", "dailyUse": 1.5, "shelfLifeDays": 3 },
+    { "name": "Smoked back bacon", "category": "meat", "unit": "kg", "dailyUse": 0.6, "shelfLifeDays": 7 },
+    { "name": "Lamb shoulder", "category": "meat", "unit": "kg", "dailyUse": 0.8, "shelfLifeDays": 5 },
+    { "name": "Cod loin", "category": "fish", "unit": "kg", "dailyUse": 1.2, "shelfLifeDays": 2 },
+    { "name": "Haddock fillet", "category": "fish", "unit": "kg", "dailyUse": 1.0, "shelfLifeDays": 2 },
+    { "name": "King prawns (frozen)", "category": "frozen", "unit": "kg", "dailyUse": 0.3, "shelfLifeDays": 180 },
+    { "name": "Vine tomatoes", "category": "produce", "unit": "kg", "dailyUse": 1.5, "shelfLifeDays": 7 },
+    { "name": "Little gem lettuce", "category": "produce", "unit": "each", "dailyUse": 6, "shelfLifeDays": 5 },
+    { "name": "Brown onions", "category": "produce", "unit": "kg", "dailyUse": 2, "shelfLifeDays": 30, "storage": "Dry store" },
+    { "name": "Maris Piper potatoes", "category": "produce", "unit": "kg", "dailyUse": 6, "shelfLifeDays": 21, "storage": "Dry store" },
+    { "name": "Chestnut mushrooms", "category": "produce", "unit": "kg", "dailyUse": 0.5, "shelfLifeDays": 5 },
+    { "name": "Fresh basil", "category": "produce", "unit": "pack", "dailyUse": 1, "shelfLifeDays": 5 },
+    { "name": "Plain flour", "category": "dry", "unit": "kg", "dailyUse": 1.5, "shelfLifeDays": 240 },
+    { "name": "Arborio rice", "category": "dry", "unit": "kg", "dailyUse": 0.6, "shelfLifeDays": 365 },
+    { "name": "Extra virgin olive oil", "category": "dry", "unit": "l", "dailyUse": 0.5, "shelfLifeDays": 540 },
+    { "name": "Tinned chopped tomatoes", "category": "dry", "unit": "each", "dailyUse": 4, "shelfLifeDays": 730 }
+  ]
+}

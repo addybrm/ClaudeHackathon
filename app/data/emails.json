@@ -1,0 +1,39 @@
+{
+  "_comment": "Fictional supplier emails shown in the inbox tab. status: delivered | dispatched | confirmed. Items use the same ingredient names and units as the catalog.",
+  "mailbox": "orders@lanternkitchen.example",
+  "emails": [
+    { "id": "em-7765", "fromName": "Holystone Meats Ltd", "from": "orders@holystone-meats.example", "sentAt": "2026-11-04T09:12:00Z",
+      "subject": "Order HSM-7765 confirmed: delivery Saturday 7 November", "orderRef": "HSM-7765", "status": "confirmed", "deliveryDate": "2026-11-07",
+      "items": [ { "ingredient": "Chicken breast", "quantity": 2, "unit": "kg", "unitPrice": 7.40 }, { "ingredient": "Lamb shoulder", "quantity": 6, "unit": "kg", "unitPrice": 9.80 } ],
+      "note": "Includes the 2 kg of chicken breast we were short on order HSM-7730. Sorry about that." },
+    { "id": "em-1194", "fromName": "Wansbeck Greens", "from": "hello@wansbeck-greens.example", "sentAt": "2026-11-04T06:40:00Z",
+      "subject": "Delivered: order WG-1194", "orderRef": "WG-1194", "status": "delivered", "deliveryDate": "2026-11-04",
+      "items": [
+        { "ingredient": "Vine tomatoes", "quantity": 10, "unit": "kg", "unitPrice": 2.60 },
+        { "ingredient": "Little gem lettuce", "quantity": 40, "unit": "each", "unitPrice": 0.55 },
+        { "ingredient": "Brown onions", "quantity": 25, "unit": "kg", "unitPrice": 0.90 },
+        { "ingredient": "Maris Piper potatoes", "quantity": 50, "unit": "kg", "unitPrice": 0.70 },
+        { "ingredient": "Chestnut mushrooms", "quantity": 4, "unit": "kg", "unitPrice": 4.20 },
+        { "ingredient": "Fresh basil", "quantity": 8, "unit": "pack", "unitPrice": 1.10 } ] },
+    { "id": "em-48290", "fromName": "Brackenfield Dairy", "from": "dispatch@brackenfield-dairy.example", "sentAt": "2026-11-03T17:05:00Z",
+      "subject": "Your order BFD-48290 has been dispatched", "orderRef": "BFD-48290", "status": "dispatched", "deliveryDate": "2026-11-06",
+      "items": [ { "ingredient": "Whole milk", "quantity": 40, "unit": "l", "unitPrice": 0.95 }, { "ingredient": "Double cream", "quantity": 4, "unit": "l", "unitPrice": 2.95 } ] },
+    { "id": "em-7730", "fromName": "Holystone Meats Ltd", "from": "orders@holystone-meats.example", "sentAt": "2026-11-03T07:30:00Z",
+      "subject": "Delivered: order HSM-7730", "orderRef": "HSM-7730", "status": "delivered", "deliveryDate": "2026-11-03",
+      "items": [ { "ingredient": "Chicken breast", "quantity": 12, "unit": "kg", "unitPrice": 7.40 }, { "ingredient": "Beef mince", "quantity": 5, "unit": "kg", "unitPrice": 6.20 }, { "ingredient": "Smoked back bacon", "quantity": 3, "unit": "kg", "unitPrice": 8.90 } ] },
+    { "id": "em-3021", "fromName": "Coldharbour Fish Co", "from": "sales@coldharbour-fish.example", "sentAt": "2026-11-03T05:55:00Z",
+      "subject": "Delivered: order CHF-3021", "orderRef": "CHF-3021", "status": "delivered", "deliveryDate": "2026-11-03",
+      "items": [ { "ingredient": "Cod loin", "quantity": 3, "unit": "kg", "unitPrice": 14.50 }, { "ingredient": "Haddock fillet", "quantity": 2, "unit": "kg", "unitPrice": 12.80 }, { "ingredient": "King prawns (frozen)", "quantity": 2, "unit": "kg", "unitPrice": 16.00 } ] },
+    { "id": "em-news", "fromName": "Wansbeck Greens", "from": "news@wansbeck-greens.example", "sentAt": "2026-11-02T12:00:00Z",
+      "subject": "What's in season this November", "status": "info",
+      "body": "Hi Lantern Kitchen team,\n\nThis month we have great parsnips, leeks and the last of the squash. Our kale is going to be short for the next two weeks because of the weather.\n\nThe Wansbeck Greens team" },
+    { "id": "em-48211", "fromName": "Brackenfield Dairy", "from": "dispatch@brackenfield-dairy.example", "sentAt": "2026-11-02T06:20:00Z",
+      "subject": "Delivered: order BFD-48211", "orderRef": "BFD-48211", "status": "delivered", "deliveryDate": "2026-11-02",
+      "items": [
+        { "ingredient": "Whole milk", "quantity": 40, "unit": "l", "unitPrice": 0.95 },
+        { "ingredient": "Double cream", "quantity": 8, "unit": "l", "unitPrice": 2.95 },
+        { "ingredient": "Unsalted butter", "quantity": 5, "unit": "kg", "unitPrice": 6.80 },
+        { "ingredient": "Free-range eggs", "quantity": 360, "unit": "each", "unitPrice": 0.28 },
+        { "ingredient": "Mature cheddar", "quantity": 4, "unit": "kg", "unitPrice": 9.50 } ] }
+  ]
+}

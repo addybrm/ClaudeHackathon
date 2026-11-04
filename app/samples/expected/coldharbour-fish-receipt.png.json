@@ -1,0 +1,47 @@
+{
+  "isReceipt": true,
+  "supplier": "Coldharbour Fish Co",
+  "orderRef": "CHF-3021",
+  "receiptDate": "2026-11-03",
+  "currency": "GBP",
+  "total": 101.1,
+  "items": [
+    {
+      "rawName": "COD LOIN SKINLESS",
+      "ingredient": "Cod loin",
+      "category": "fish",
+      "quantity": 3,
+      "unit": "kg",
+      "unitPrice": 14.5,
+      "lineTotal": 43.5,
+      "expiryDate": "2026-11-05",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "HADDOCK FILLET",
+      "ingredient": "Haddock fillet",
+      "category": "fish",
+      "quantity": 2,
+      "unit": "kg",
+      "unitPrice": 12.8,
+      "lineTotal": 25.6,
+      "expiryDate": "2026-11-05",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "KING PRAWNS RAW FRZ",
+      "ingredient": "King prawns (frozen)",
+      "category": "frozen",
+      "quantity": 2,
+      "unit": "kg",
+      "unitPrice": 16.0,
+      "lineTotal": 32.0,
+      "expiryDate": "2027-04-30",
+      "confidence": "high",
+      "note": ""
+    }
+  ],
+  "warnings": []
+}

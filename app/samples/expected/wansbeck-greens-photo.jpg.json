@@ -1,0 +1,83 @@
+{
+  "isReceipt": true,
+  "supplier": "Wansbeck Greens",
+  "orderRef": "WG-1194",
+  "receiptDate": "2026-11-04",
+  "currency": "GBP",
+  "total": 131.1,
+  "items": [
+    {
+      "rawName": "VINE TOMS",
+      "ingredient": "Vine tomatoes",
+      "category": "produce",
+      "quantity": 10,
+      "unit": "kg",
+      "unitPrice": 2.6,
+      "lineTotal": 26.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "LTL GEM LETTUCE",
+      "ingredient": "Little gem lettuce",
+      "category": "produce",
+      "quantity": 40,
+      "unit": "each",
+      "unitPrice": 0.55,
+      "lineTotal": 22.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "BROWN ONIONS",
+      "ingredient": "Brown onions",
+      "category": "produce",
+      "quantity": 25,
+      "unit": "kg",
+      "unitPrice": 0.9,
+      "lineTotal": 22.5,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "MARIS PIPER POTS",
+      "ingredient": "Maris Piper potatoes",
+      "category": "produce",
+      "quantity": 50,
+      "unit": "kg",
+      "unitPrice": 0.7,
+      "lineTotal": 35.0,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "CHESTNUT MUSH",
+      "ingredient": "Chestnut mushrooms",
+      "category": "produce",
+      "quantity": 4,
+      "unit": "kg",
+      "unitPrice": 4.2,
+      "lineTotal": 16.8,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    },
+    {
+      "rawName": "BASIL PUNNET",
+      "ingredient": "Fresh basil",
+      "category": "produce",
+      "quantity": 8,
+      "unit": "pack",
+      "unitPrice": 1.1,
+      "lineTotal": 8.8,
+      "expiryDate": "",
+      "confidence": "high",
+      "note": ""
+    }
+  ],
+  "warnings": []
+}
