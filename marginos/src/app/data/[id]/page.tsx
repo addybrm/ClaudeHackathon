@@ -23,7 +23,7 @@ export default async function UploadReview({ params }: { params: Promise<{ id: s
       <div className="mb-2 text-[12px] text-muted"><Link href="/data" className="hover:text-ink">Data centre</Link> / Review import</div>
       <PageHeader
         title={f.file_name}
-        description={<>{sourceLabel[f.source_type]} · uploaded {dateTime(f.uploaded_at)} · {f.extraction_method === "claude" ? "extracted by Claude" : f.extraction_method === "preread_sample" ? "pre-read sample (not live AI)" : "parsed deterministically"}{f.confirmed_at && ` · imported ${dateTime(f.confirmed_at)}`}</>}
+        description={<>{sourceLabel[f.source_type]}, uploaded {dateTime(f.uploaded_at)}, {f.extraction_method === "claude" ? "extracted by Claude" : f.extraction_method === "preread_sample" ? "pre-read sample (not live AI)" : "parsed deterministically"}{f.confirmed_at && `, imported ${dateTime(f.confirmed_at)}`}</>}
         actions={f.storage_path ? <a href={`/api/uploads/${f.id}/file`} target="_blank" rel="noreferrer" className="inline-flex h-8 items-center rounded border border-line-strong bg-surface-2 px-3 text-[13px] text-ink hover:bg-surface-3">Open original ↗</a> : undefined}
       />
       {f.status === "failed" && (

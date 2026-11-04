@@ -107,7 +107,7 @@ export default async function CostsPage({ searchParams }: { searchParams: Promis
                         <td className="r">{qty(c.usageCurrent, c.baseUnit)}</td>
                         <td className={`r font-medium ${c.impactCurrentPeriod < 0 ? "text-bad" : "text-good"}`}>{gbp(c.impactCurrentPeriod)}</td>
                         <td className="max-w-[360px] text-[12px] text-muted">{c.affectedDishes.filter((d) => d.unitsSold > 0).slice(0, 3).map((d) => `${d.name} (${gbp(d.impact)})`).join(", ") || "—"}</td>
-                        <td className="whitespace-nowrap text-[12px]">{last ? <InvoiceLink invoices={invoices} number={last.invoiceNumber} label={`${last.invoiceNumber} · ${dateLong(last.date)}`} /> : "—"}</td>
+                        <td className="whitespace-nowrap text-[12px]">{last ? <InvoiceLink invoices={invoices} number={last.invoiceNumber} label={`${last.invoiceNumber}, ${dateLong(last.date)}`} /> : "—"}</td>
                       </tr>
                     );
                   })}
@@ -161,7 +161,7 @@ export default async function CostsPage({ searchParams }: { searchParams: Promis
                   <td className="r">{i.lines}{num(i.unmatched) > 0 && <span className="ml-1 text-[11px] text-muted">({i.unmatched} non-ingredient)</span>}</td>
                   <td className="r">{gbp2(num(i.subtotal))}</td>
                   <td className="r">{gbp2(num(i.total))}</td>
-                  <td>{(() => { const c = checkById.get(i.id); if (!c) return <span className="text-[12px] text-faint">—</span>; return c.status === "verified" ? <Badge tone="good">matches order</Badge> : c.status === "no_order" ? <Badge tone="warn">no order</Badge> : <Badge tone="bad">differs{c.atStake > 0 ? ` · ${gbp2(c.atStake)}` : ""}</Badge>; })()}</td>
+                  <td>{(() => { const c = checkById.get(i.id); if (!c) return <span className="text-[12px] text-faint">—</span>; return c.status === "verified" ? <Badge tone="good">matches order</Badge> : c.status === "no_order" ? <Badge tone="warn">no order</Badge> : <Badge tone="bad">differs{c.atStake > 0 ? `, ${gbp2(c.atStake)}` : ""}</Badge>; })()}</td>
                   <td>{i.source === "demo" ? <Badge tone="warn">demo seed</Badge> : i.method === "claude" ? <Badge tone="info">extracted by Claude</Badge> : i.method === "preread_sample" ? <Badge tone="warn">pre-read sample</Badge> : <Badge>imported</Badge>}</td>
                 </tr>
               ))}

@@ -31,7 +31,7 @@ function niceTicks(max: number, count = 4) {
 function Tooltip({ x, y, width, children }: { x: number; y: number; width: number; children: React.ReactNode }) {
   const left = Math.min(Math.max(8, x + 12), width - 188);
   return (
-    <div className="pointer-events-none absolute z-10 w-[180px] rounded border border-line-strong bg-[#1d1d1b] px-2.5 py-2 text-[12px] shadow-lg" style={{ left, top: Math.max(0, y - 10) }}>
+    <div className="pointer-events-none absolute z-10 w-[180px] rounded border border-line-strong bg-surface px-2.5 py-2 text-[12px] shadow-[0_8px_24px_rgba(20,20,20,0.10)]" style={{ left, top: Math.max(0, y - 10) }}>
       {children}
     </div>
   );
@@ -134,7 +134,7 @@ export function Waterfall({ start, end, startLabel, endLabel, steps, height = 24
             const w = bw * 0.64;
             const yTop = y(Math.max(b.from, b.to));
             const h = Math.max(1.5, Math.abs(y(b.from) - y(b.to)));
-            const fill = b.kind === "total" ? "#8f8c82" : b.kind === "up" ? "var(--good)" : "var(--bad)";
+            const fill = b.kind === "total" ? "#5c5c57" : b.kind === "up" ? "var(--good)" : "var(--bad)";
             return (
               <g key={i} onMouseEnter={() => setHover(i)}>
                 <rect x={pad.l + i * bw} y={pad.t} width={bw} height={ih} fill="transparent" />
@@ -212,13 +212,13 @@ export function QuadrantScatter({ points, xThreshold, yThreshold, height = 300, 
             <g key={t}><line x1={pad.l} x2={width - pad.r} y1={y(t)} y2={y(t)} stroke="var(--grid)" /><text x={pad.l - 8} y={y(t) + 4} textAnchor="end" fontSize="11" fill="var(--muted)" className="num">£{t}</text></g>
           ))}
           {xt.map((t) => <text key={t} x={x(t)} y={height - 16} textAnchor="middle" fontSize="11" fill="var(--muted)" className="num">{t}</text>)}
-          <text x={pad.l} y={height - 1} fontSize="10" fill="var(--faint)">units sold →</text>
+          <text x={pad.l} y={height - 1} fontSize="10" fill="var(--faint)">Units sold</text>
           <line x1={x(xThreshold)} x2={x(xThreshold)} y1={pad.t} y2={pad.t + ih} stroke="var(--border-strong)" strokeDasharray="4 3" />
           <line x1={pad.l} x2={width - pad.r} y1={y(yThreshold)} y2={y(yThreshold)} stroke="var(--border-strong)" strokeDasharray="4 3" />
-          <text x={width - pad.r - 4} y={pad.t + 12} textAnchor="end" fontSize="11" fill="var(--faint)">High vol · high contrib.</text>
-          <text x={pad.l + 6} y={pad.t + 12} fontSize="11" fill="var(--faint)">Low vol · high contrib.</text>
-          <text x={width - pad.r - 4} y={pad.t + ih - 6} textAnchor="end" fontSize="11" fill="var(--faint)">High vol · low contrib.</text>
-          <text x={pad.l + 6} y={pad.t + ih - 6} fontSize="11" fill="var(--faint)">Low vol · low contrib.</text>
+          <text x={width - pad.r - 4} y={pad.t + 12} textAnchor="end" fontSize="11" fill="var(--faint)">High vol, high contrib.</text>
+          <text x={pad.l + 6} y={pad.t + 12} fontSize="11" fill="var(--faint)">Low vol, high contrib.</text>
+          <text x={width - pad.r - 4} y={pad.t + ih - 6} textAnchor="end" fontSize="11" fill="var(--faint)">High vol, low contrib.</text>
+          <text x={pad.l + 6} y={pad.t + ih - 6} fontSize="11" fill="var(--faint)">Low vol, low contrib.</text>
           {points.map((p) => (
             <g key={p.id} onMouseEnter={() => setHover(p.id)} onClick={() => onSelect?.(p.id)} style={{ cursor: onSelect ? "pointer" : undefined }}>
               <circle cx={x(p.x)} cy={y(p.y)} r={12} fill="transparent" />

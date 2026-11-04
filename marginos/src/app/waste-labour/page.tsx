@@ -102,7 +102,7 @@ export default async function WasteLabourPage({ searchParams }: { searchParams: 
                   {lc.flaggedDays.map((d) => (
                     <li key={d.day} className="flex items-baseline justify-between gap-3">
                       <span className="text-ink">{new Date(d.day).toLocaleDateString("en-GB", { weekday: "short", timeZone: "UTC" })} {dateShort(d.day)}</span>
-                      <span className="num text-muted">{gbp(d.cost)} on {gbp(d.revenue)} · <span className="text-warn">{pct(d.labourPct)}</span></span>
+                      <span className="num text-muted">{gbp(d.cost)} on {gbp(d.revenue)}, <span className="text-warn">{pct(d.labourPct)}</span></span>
                     </li>
                   ))}
                 </ul>

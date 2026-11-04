@@ -30,7 +30,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
   return (
     <>
       <div className="mb-2 text-[12px] text-muted"><Link href="/costs" className="hover:text-ink">Cost intelligence</Link> / Invoices</div>
-      <PageHeader title={`${inv.supplier} · ${inv.invoice_number}`} description={`Dated ${dateLong(inv.date)}`} actions={hasFile ? <a href={`/api/uploads/${inv.file_id}/file`} target="_blank" rel="noreferrer" className="inline-flex h-8 items-center rounded border border-line-strong bg-surface-2 px-3 text-[13px] text-ink hover:bg-surface-3">View source document ↗</a> : undefined} />
+      <PageHeader title={`${inv.supplier}, ${inv.invoice_number}`} description={`Dated ${dateLong(inv.date)}`} actions={hasFile ? <a href={`/api/uploads/${inv.file_id}/file`} target="_blank" rel="noreferrer" className="inline-flex h-8 items-center rounded border border-line-strong bg-surface-2 px-3 text-[13px] text-ink hover:bg-surface-3">View source document ↗</a> : undefined} />
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
         <Panel pad={false} title="Lines" subtitle="Quantities and unit prices normalised to each ingredient's base unit">
           <table className="tbl num">
@@ -62,7 +62,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
           <KV k="Total" v={gbp2(num(inv.total))} />
           <div className="my-3 border-t border-line" />
           <KV k="Order" v={check?.matchedOrder ?? <Badge tone="warn">none on file</Badge>} />
-          {check && check.status !== "no_order" && <KV k="Order check" v={check.status === "verified" ? <Badge tone="good">matches</Badge> : <Badge tone="bad">differs{check.atStake > 0 ? ` · ${gbp2(check.atStake)} at stake` : ""}</Badge>} />}
+          {check && check.status !== "no_order" && <KV k="Order check" v={check.status === "verified" ? <Badge tone="good">matches</Badge> : <Badge tone="bad">differs{check.atStake > 0 ? `, ${gbp2(check.atStake)} at stake` : ""}</Badge>} />}
           {check && check.missingFromInvoice.length > 0 && <p className="mt-1 text-[12px] text-muted">Ordered but not invoiced: {check.missingFromInvoice.map((m) => m.description).join(", ")}</p>}
           <div className="my-3 border-t border-line" />
           <KV k="Source" v={inv.source === "demo" ? <Badge tone="warn">Demo seed data</Badge> : inv.extraction_method === "claude" ? <Badge tone="info">Extracted by Claude, confirmed by owner</Badge> : inv.extraction_method === "preread_sample" ? <Badge tone="warn">Pre-read sample (not live AI)</Badge> : <Badge>Imported</Badge>} />

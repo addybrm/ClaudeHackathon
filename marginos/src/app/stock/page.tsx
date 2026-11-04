@@ -19,12 +19,12 @@ export default async function StockPage() {
     <>
       <PageHeader
         title="Stock & expiry"
-        description={<>Forecast as of {dateLong(s.asOf)} · modelled from deliveries and recipe usage</>}
+        description={<>Forecast as of {dateLong(s.asOf)}, modelled from deliveries and recipe usage</>}
       />
       <StatRow cols={4}>
         <Stat label="Stock on hand (modelled)" value={gbp(s.totals.stockValue)} sub="at invoice cost" />
         <Stat label="Likely to go to waste" value={gbp(s.totals.atRiskValue)} sub="from stock on hand now" />
-        <Stat label="Went off unused, last 30 days" value={gbp(s.totals.expiredLast30Value)} sub={`modelled · you recorded ${gbp(recorded.totalCost)} of waste`} hint="If the model is much higher than recorded waste, waste may be going unrecorded (or usage is under-estimated)." />
+        <Stat label="Went off unused, last 30 days" value={gbp(s.totals.expiredLast30Value)} sub={`modelled, you recorded ${gbp(recorded.totalCost)} of waste`} hint="If the model is much higher than recorded waste, waste may be going unrecorded (or usage is under-estimated)." />
         <Stat label="Use-by within 3 days" value={s.totals.expiringIn3Days} sub="ingredients" />
       </StatRow>
 

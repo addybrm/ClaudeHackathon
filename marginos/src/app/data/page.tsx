@@ -57,7 +57,7 @@ export default async function DataCentre() {
                 </div>
                 <Badge tone={s.type === "supplier_invoice" ? "info" : "neutral"}>{s.type === "supplier_invoice" ? "Claude extraction" : "CSV parser"}</Badge>
               </div>
-              {spec && <code className="mt-3 block overflow-x-auto whitespace-nowrap rounded bg-[#121211] px-2 py-1.5 font-mono text-[11px] text-ink-2" title={`Required: ${spec.required.join(", ")}`}>{spec.example}</code>}
+              {spec && <code className="mt-3 block overflow-x-auto whitespace-nowrap rounded bg-surface-2 px-2 py-1.5 font-mono text-[11px] text-ink-2" title={`Required: ${spec.required.join(", ")}`}>{spec.example}</code>}
               {s.type === "supplier_invoice" && !ai && <p className="mt-3 text-[12px] text-warn">Needs ANTHROPIC_API_KEY. Without it, only the bundled sample documents work (pre-read, labelled); other files fail clearly rather than guessing.</p>}
               <div className="mt-auto flex items-center justify-between gap-2 pt-3">
                 <span className="text-[11px] text-muted">{l ? `Last import ${dateTime(l.uploaded_at)}` : "Nothing imported yet"}</span>
@@ -108,7 +108,7 @@ export default async function DataCentre() {
                         <span className="flex gap-1.5">{u.errors > 0 && <Badge tone="bad">{u.errors} errors</Badge>}{u.warnings > 0 && <Badge tone="warn">{u.warnings} warnings</Badge>}{!u.errors && !u.warnings && <span className="text-muted">clean</span>}</span>
                       )}
                     </td>
-                    <td className="r">{u.extraction_method !== "demo_seed" && <Link href={`/data/${u.id}`} className="text-[12px] text-ink-2 hover:text-ink">{u.status === "awaiting_review" ? "Review →" : "View →"}</Link>}</td>
+                    <td className="r">{u.extraction_method !== "demo_seed" && <Link href={`/data/${u.id}`} className="text-[12px] text-ink-2 hover:text-ink">{u.status === "awaiting_review" ? "Review" : "View"}</Link>}</td>
                   </tr>
                 ))}
               </tbody>

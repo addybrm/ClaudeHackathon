@@ -156,8 +156,8 @@ export function Investigator({ periodKey, live, model, history, saved, autoQuest
                     <span className="line-clamp-1">{h.question}</span>
                     <span className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted">
                       {new Date(h.created_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-                      <span>· {h.mode === "live" ? "Claude" : "offline"}</span>
-                      {h.status === "failed" && <span className="text-bad">· failed</span>}
+                      <span>{h.mode === "live" ? "Claude" : "Offline"}</span>
+                      {h.status === "failed" && <span className="text-bad">Failed</span>}
                     </span>
                   </Link>
                 </li>
@@ -173,7 +173,7 @@ export function Investigator({ periodKey, live, model, history, saved, autoQuest
             <div className="text-[22px] font-semibold tracking-[-0.02em] text-ink">What do you want to know?</div>
             <div className="mt-5 flex flex-wrap gap-2">
               {SUGGESTIONS.slice(0, 6).map((s) => (
-                <button key={s} disabled={running} onClick={() => ask(s)} className="rounded-full border border-line-strong bg-surface px-3 py-1.5 text-[12px] text-ink-2 hover:border-[#4a4a45] hover:text-ink disabled:opacity-50">{s}</button>
+                <button key={s} disabled={running} onClick={() => ask(s)} className="rounded-full border border-line-strong bg-surface px-3 py-1.5 text-[12px] text-ink-2 hover:border-ink hover:text-ink disabled:opacity-50">{s}</button>
               ))}
             </div>
           </div>
@@ -186,7 +186,7 @@ export function Investigator({ periodKey, live, model, history, saved, autoQuest
           className="sticky bottom-0 mt-6 border-t border-line bg-bg pb-4 pt-3"
           onSubmit={(e) => { e.preventDefault(); if (q.trim().length >= 3 && !running) ask(q.trim()); }}
         >
-          <div className="flex items-end gap-2 rounded-md border border-line-strong bg-surface p-2 focus-within:border-[#5c5a52]">
+          <div className="flex items-end gap-2 rounded-md border border-line-strong bg-surface p-2 focus-within:border-ink">
             <textarea
               rows={2}
               value={q}
@@ -212,7 +212,7 @@ function TurnView({ t }: { t: Turn }) {
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-[15px] font-medium text-ink">{t.question}</h3>
         <div className="flex shrink-0 items-center gap-1.5">
-          {t.mode === "live" && <Badge tone="good">Claude{t.model ? ` · ${t.model}` : ""}</Badge>}
+          {t.mode === "live" && <Badge tone="good">Claude</Badge>}
           {t.mode === "demo" && <Badge title="Rule-based offline analysis using the same finance tools. Not AI.">Offline analysis</Badge>}
           {t.durationMs !== null && <span className="text-[11px] text-muted">{(t.durationMs / 1000).toFixed(1)}s</span>}
         </div>
@@ -221,7 +221,7 @@ function TurnView({ t }: { t: Turn }) {
       <div className="rounded-md border border-line bg-surface">
         <div className="flex items-center justify-between border-b border-line px-3 py-2 text-[12px]">
           <span className="text-ink-2">Investigation trace</span>
-          <span className="text-muted">{t.steps.length} tool call{t.steps.length === 1 ? "" : "s"}{totalMs ? ` · ${totalMs} ms of calculation` : ""}</span>
+          <span className="text-muted">{t.steps.length} tool call{t.steps.length === 1 ? "" : "s"}{totalMs ? `, ${totalMs} ms of calculation` : ""}</span>
         </div>
         <ol className="divide-y divide-line">
           {t.steps.map((s, i) => (
@@ -235,7 +235,7 @@ function TurnView({ t }: { t: Turn }) {
                 <span className="text-[11px] text-faint">{open === s.id ? "▾" : "▸"}</span>
               </button>
               {open === s.id && (
-                <div className="border-t border-line bg-[#121211] px-3 py-2">
+                <div className="border-t border-line bg-surface-2 px-3 py-2">
                   {s.error && <p className="mb-2 text-[12px] text-bad">{s.error}</p>}
                   <pre className="max-h-80 overflow-auto whitespace-pre-wrap break-all font-mono text-[11px] leading-[1.5] text-ink-2">{JSON.stringify(s.result ?? s.input, null, 1)}</pre>
                 </div>
@@ -346,7 +346,7 @@ function Report({ r, v, onEvidence, steps }: { r: InvestigationReport; v: Verifi
         <div className="px-5 py-4">
           <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.06em] text-muted">Data gaps &amp; caveats</div>
           {r.data_gaps.length === 0 ? <p className="text-[12px] text-muted">None reported.</p> : (
-            <ul className="space-y-1.5 text-[12px] text-ink-2">{r.data_gaps.map((g, i) => <li key={i} className="flex gap-2"><span className="text-warn">·</span>{g}</li>)}</ul>
+            <ul className="space-y-1.5 text-[12px] text-ink-2">{r.data_gaps.map((g, i) => <li key={i} className="flex gap-2"><span className="text-warn"></span>{g}</li>)}</ul>
           )}
         </div>
       </div>

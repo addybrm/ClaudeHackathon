@@ -56,7 +56,7 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
       </div>
 
       <div className="space-y-5">
-        <Panel pad={false} title={`${channelLabel[channel]} · ${res.period.label}`} subtitle="Per unit, ex VAT">
+        <Panel pad={false} title={`${channelLabel[channel]}, ${res.period.label}`} subtitle="Per unit, ex VAT">
           <div className="overflow-x-auto">
             <table className="tbl num">
               <thead>
@@ -88,7 +88,7 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
                             {!i.hasRecipe && <Badge tone="bad">no recipe</Badge>}
                             {i.hasRecipe && !i.recipeComplete && <Badge tone="bad" title={i.missingCosts.join(", ")}>missing costs</Badge>}
                             {i.recipeEstimated && <Badge tone="warn" title="Includes an ingredient priced from an estimated standard cost">est. cost</Badge>}
-                            {channel === "all" && i.quadrant && <span className="text-faint">· {quadrantLabel[i.quadrant]}</span>}
+                            {channel === "all" && i.quadrant && <span className="text-faint">{quadrantLabel[i.quadrant]}</span>}
                           </span>
                         </Link>
                       </td>
@@ -129,9 +129,9 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
                   <li key={i.id} className="flex items-start justify-between gap-3">
                     <div>
                       <div className="text-ink">{i.name}</div>
-                      <div className="text-muted">{i.hasRecipe ? `Missing: ${i.missingCosts.join(", ")}` : "No recipe on file"} · {int(i.total.units)} sold, {gbp(i.total.netRevenue)} revenue excluded</div>
+                      <div className="text-muted">{i.hasRecipe ? `Missing: ${i.missingCosts.join(", ")}` : "No recipe on file"}, {int(i.total.units)} sold, {gbp(i.total.netRevenue)} revenue excluded</div>
                     </div>
-                    <Link href="/data" className="shrink-0 text-ink-2 hover:text-ink">Import →</Link>
+                    <Link href="/data" className="shrink-0 text-ink-2 hover:text-ink">Import</Link>
                   </li>
                 ))}
               </ul>

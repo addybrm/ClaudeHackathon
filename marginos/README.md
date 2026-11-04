@@ -12,7 +12,7 @@ cp .env.example .env.local      # add ANTHROPIC_API_KEY for live AI (optional)
 npm run dev                      # http://localhost:3000
 ```
 
-1. Open the app and click **Load demo restaurant**. This generates The Copper Table, a fictional Newcastle restaurant: about 5,300 orders, 37 supplier invoices, waste logs and rotas for September–October 2026.
+1. Open the app and **create an account** (your name, restaurant, email and a password of 10+ characters). You land on your empty restaurant with a short import checklist. To look around first, open the **restaurant switcher** (top of the sidebar) and choose **Open the sample restaurant**: The Copper Table, a fictional Newcastle restaurant with about 5,300 orders, 37 supplier invoices, waste logs and rotas for September–October 2026.
 2. **Overview**: October net revenue is up while contribution is down, and the contribution bridge shows why.
 3. **Data centre → Demo sample files**: upload the held-back 31 October POS export, review the staged rows, and confirm. Then do the same for the late platform settlement, the menu export (it adds the missing recipe for the seasonal special), the waste log and the rota.
    - Upload the **PDF invoice**: it is checked against its supplier order and flagged, because oil is charged above the agreed price and one line wasn't ordered.
@@ -33,6 +33,13 @@ No database server is needed. MarginOS runs an embedded PostgreSQL (PGlite) stor
 | Invoice PDF/image extraction | Claude structured extraction → staged review | Bundled sample documents use a stored **pre-read** result, labelled "pre-read sample (not live AI)". Any other file fails with a clear message. Set `MARGINOS_PREREAD=1` to force pre-read for the samples even with a key (a backup for bad wifi at a pitch). |
 
 If a live call fails, the UI says so and shows no result. It never falls back silently to a fabricated answer. Live requests enable server-side refusal fallback (`fallbacks: "default"`).
+
+## Accounts and security
+
+- Email and password sign-up and sign-in. Passwords are scrypt-hashed with a per-user salt. Sessions are random 256-bit tokens, stored only as SHA-256 hashes, in an httpOnly SameSite=Lax cookie (Secure in production) that expires after 30 days.
+- Failed sign-ins are throttled (8 per email and IP per 15 minutes).
+- `src/proxy.ts` sends signed-out visitors to /login. Every page and API route then re-validates the session against the database and reads only the restaurant the user is a member of (`memberships`). A user cannot switch into another user's restaurant (tested).
+- One account can hold several restaurants plus its own sample restaurant; switch from the top of the sidebar.
 
 ## How Claude is used, and kept honest
 

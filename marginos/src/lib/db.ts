@@ -15,7 +15,7 @@ export type Queryable = Pick<PGlite, "query"> | Transaction;
 // Default lives outside the project so dev-server file watchers and cloud-sync folders (e.g. OneDrive) never touch database files.
 const DATA_DIR = process.env.MARGINOS_DATA_DIR ? path.resolve(process.cwd(), process.env.MARGINOS_DATA_DIR) : path.join(os.homedir(), ".marginos");
 // RLS (0090) runs on Supabase only: it depends on the auth schema.
-const LOCAL_MIGRATIONS = ["0001_init.sql", "0002_stock_and_orders.sql"];
+const LOCAL_MIGRATIONS = ["0001_init.sql", "0002_stock_and_orders.sql", "0003_auth.sql"];
 
 type GlobalDb = { __marginosDb?: Promise<PGlite> };
 const g = globalThis as unknown as GlobalDb;

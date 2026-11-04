@@ -66,7 +66,7 @@ export function CreateWorkspaceForm() {
         <Field label="Commission %"><input type="number" min={0} max={60} step="0.5" value={rate} onChange={(e) => setRate(e.target.value)} className="input" /></Field>
       </div>
       {err && <p className="text-[12px] text-bad">{err}</p>}
-      <Button type="submit" disabled={busy}>{busy ? "Creating…" : "Create empty workspace"}</Button>
+      <Button type="submit" variant="primary" disabled={busy}>{busy ? "Adding…" : "Add restaurant"}</Button>
     </form>
   );
 }
@@ -74,7 +74,7 @@ export function CreateWorkspaceForm() {
 export function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-[12px] text-muted">{label}</span>
+      <span className="mb-1.5 block text-[13px] font-medium text-ink-2">{label}</span>
       {children}
     </label>
   );

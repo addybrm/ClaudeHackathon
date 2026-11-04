@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getActiveBusiness, resolvePeriodKey } from "@/lib/business";
 import { query } from "@/lib/db";
 import * as engine from "@/lib/finance/engine";
@@ -8,24 +9,15 @@ import { dateLong, dateTime, gbp, pct, signed } from "@/lib/format";
 import { LineCompare, Waterfall } from "@/components/charts";
 import { PeriodPicker } from "@/components/shell";
 import { Badge, Button, Delta, Empty, PageHeader, Panel, SeverityDot, Stat, StatRow } from "@/components/ui";
-import { CreateWorkspaceForm, LoadDemoButton } from "@/components/actions";
 import { invoiceChecks, stockForecast } from "@/lib/finance/operations";
-import { Wordmark } from "@/components/logo";
 
 export default async function Overview({ searchParams }: { searchParams: Promise<Record<string, string | string[]>> }) {
   const b = await getActiveBusiness();
-  if (!b) return <Welcome />;
+  if (!b) redirect("/onboarding");
   const sp = await searchParams;
   const { key, available } = await resolvePeriodKey(b, sp.period);
   if (!key) {
-    return (
-      <>
-        <PageHeader title="Overview" description={`${b.name} has no sales data yet.`} />
-        <Empty title="Import your first POS export" action={<Button href="/data" variant="primary">Open Data Centre</Button>}>
-          Start with a menu &amp; recipes CSV, then a POS sales export. Contribution needs both.
-        </Empty>
-      </>
-    );
+    return <FirstRun name={b.name} />;
   }
   const cur = period(key);
   const prev = previousPeriod(key);
@@ -59,7 +51,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
     <>
       <PageHeader
         title="Overview"
-        description={<>{b.name} · {cur.label} · ex VAT</>}
+        description={<>{b.name}, {cur.label}, ex VAT</>}
         actions={<PeriodPicker value={key} available={available} compareLabel={hasPrev ? prev.label : undefined} />}
       />
 
@@ -95,10 +87,10 @@ export default async function Overview({ searchParams }: { searchParams: Promise
               />
             </Panel>
           )}
-          <Panel title="Net revenue by day" subtitle={`Ex VAT, after discounts and refunds${health.sales.latest && health.sales.latest.slice(0, 10) < cur.end && new Date(health.sales.latest).getTime() < Date.parse(cur.end) - 86400000 ? ` · sales imported to ${dateLong(health.sales.latest)}` : ""}`}>
+          <Panel title="Net revenue by day" subtitle={`Ex VAT, after discounts and refunds${health.sales.latest && health.sales.latest.slice(0, 10) < cur.end && new Date(health.sales.latest).getTime() < Date.parse(cur.end) - 86400000 ? `, sales imported to ${dateLong(health.sales.latest)}` : ""}`}>
             <LineCompare current={trimToData(dc, health.sales.latest).map((d) => ({ day: d.day, value: d.revenue }))} previous={dp.map((d) => ({ day: d.day, value: d.revenue }))} currentLabel={cur.label} previousLabel={prev.label} />
           </Panel>
-          <Panel title="Channels" pad={false} actions={<Link href={`/menu?period=${key}&channel=delivery`} className="text-[12px] text-ink-2 hover:text-ink">Delivery dishes →</Link>}>
+          <Panel title="Channels" pad={false} actions={<Link href={`/menu?period=${key}&channel=delivery`} className="text-[12px] text-ink-2 hover:text-ink">Delivery dishes</Link>}>
             <table className="tbl num">
               <thead>
                 <tr><th>Channel</th><th className="r">Orders</th><th className="r">Net revenue</th><th className="r">Discounts</th><th className="r">Commission</th><th className="r">Contribution</th><th className="r">Margin</th><th className="r">vs {prev.short}</th></tr>
@@ -130,7 +122,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
               <p className="text-[12px] text-muted">Nothing unusual against {prev.label}.</p>
             ) : (
               <ul className="space-y-3">
-                {alerts.map((a, i) => (
+                {alerts.slice(0, 5).map((a, i) => (
                   <li key={i}>
                     <Link href={`${a.href}${a.href.includes("?") ? "&" : "?"}period=${key}`} className="group flex gap-2.5">
                       <SeverityDot severity={a.severity} />
@@ -145,7 +137,7 @@ export default async function Overview({ searchParams }: { searchParams: Promise
             )}
           </Panel>
 
-          <Panel title="Recent investigations" actions={<Link href="/investigator" className="text-[12px] text-ink-2 hover:text-ink">Open →</Link>}>
+          <Panel title="Recent investigations" actions={<Link href="/investigator" className="text-[12px] text-ink-2 hover:text-ink">View all</Link>}>
             {recent.length === 0 ? (
               <div className="text-[12px] text-muted">
                 No investigations yet. Ask <Link href={`/investigator?period=${key}&q=revenue`} className="text-ink-2 underline decoration-line-strong underline-offset-2">“Revenue increased, so why did my profitability decline?”</Link>
@@ -169,15 +161,15 @@ export default async function Overview({ searchParams }: { searchParams: Promise
             )}
           </Panel>
 
-          <Panel title="Data sources" actions={<Link href="/data" className="text-[12px] text-ink-2 hover:text-ink">Data centre →</Link>}>
+          <Panel title="Data sources" actions={<Link href="/data" className="text-[12px] text-ink-2 hover:text-ink">Manage data</Link>}>
             <ul className="space-y-2 text-[12px]">
-              <Fresh label="POS sales" ok={health.sales.count > 0} detail={health.sales.count ? `${health.sales.count.toLocaleString("en-GB")} orders · latest ${dateLong(health.sales.latest)}` : "none"} />
-              <Fresh label="Supplier invoices" ok={health.invoices.count > 0} detail={health.invoices.count ? `${health.invoices.count} invoices · latest ${dateLong(health.invoices.latest)}` : "none"} />
+              <Fresh label="POS sales" ok={health.sales.count > 0} detail={health.sales.count ? `${health.sales.count.toLocaleString("en-GB")} orders, latest ${dateLong(health.sales.latest)}` : "none"} />
+              <Fresh label="Supplier invoices" ok={health.invoices.count > 0} detail={health.invoices.count ? `${health.invoices.count} invoices, latest ${dateLong(health.invoices.latest)}` : "none"} />
               <Fresh label="Recipes" ok={health.menu.recipes >= health.menu.items && health.menu.items > 0} warn={health.menu.recipes < health.menu.items} detail={`${health.menu.recipes} of ${health.menu.items} menu items costed`} />
               <Fresh label="Delivery settlements" ok={health.delivery.settled >= health.delivery.orders} warn={health.delivery.settled < health.delivery.orders} detail={`${health.delivery.settled.toLocaleString("en-GB")} of ${health.delivery.orders.toLocaleString("en-GB")} delivery orders settled${health.delivery.settled < health.delivery.orders ? " — rest estimated" : ""}`} />
-              <Fresh label="Waste log" ok={health.waste.count > 0} detail={health.waste.count ? `${health.waste.count} records · latest ${dateLong(health.waste.latest)}` : "none recorded"} />
+              <Fresh label="Waste log" ok={health.waste.count > 0} detail={health.waste.count ? `${health.waste.count} records, latest ${dateLong(health.waste.latest)}` : "none recorded"} />
               <Fresh label="Supplier order checks" ok={billing.summary.invoices > 0 && billing.summary.noOrder === 0} warn={billing.summary.noOrder > 0} detail={billing.summary.invoices ? `${billing.summary.invoices - billing.summary.noOrder} of ${billing.summary.invoices} ${cur.short} invoices have an order to check against` : "no invoices this month"} />
-              <Fresh label="Labour" ok={health.labour.count > 0} detail={health.labour.count ? `${health.labour.count} shifts · latest ${dateLong(health.labour.latest)}` : "none recorded"} />
+              <Fresh label="Labour" ok={health.labour.count > 0} detail={health.labour.count ? `${health.labour.count} shifts, latest ${dateLong(health.labour.latest)}` : "none recorded"} />
             </ul>
             {sc.commissionEstimatedShare > 0 && <p className="mt-3 text-[12px] text-muted">{signed(sc.commissionEstimatedShare * 100, "%", 0).replace("+", "")} of {cur.short} commission is estimated.</p>}
           </Panel>
@@ -206,30 +198,33 @@ function Fresh({ label, detail, ok, warn }: { label: string; detail: string; ok:
   );
 }
 
-function Welcome() {
+function FirstRun({ name }: { name: string }) {
+  const steps: [string, string][] = [
+    ["Import your menu and recipes", "Dishes, prices and recipe quantities, so every dish can be costed."],
+    ["Import a till export", "Line-level sales from your POS. One month is enough to start; two lets MarginOS compare."],
+    ["Add supplier invoices", "Upload PDFs or photos. Claude reads them, and you confirm every line before it updates costs."],
+    ["Add delivery statements, waste and rota", "Optional, but they explain commission, waste and wage cost."],
+  ];
   return (
-    <div className="mx-auto max-w-4xl py-10">
-      <div className="mb-8">
-        <Wordmark size={18} />
-        <h1 className="mt-6 text-[28px] font-semibold leading-tight tracking-[-0.02em] text-ink">Understand where your restaurant&apos;s money is going, why profitability is changing, and what to do next.</h1>
-        <p className="mt-3 max-w-2xl text-[14px] text-ink-2">
-          MarginOS connects POS exports, supplier invoices, recipes, delivery statements, waste logs and rotas, then investigates changes in contribution with evidence you can check, line by line.
-        </p>
-      </div>
-      <div className="grid gap-5 md:grid-cols-2">
-        <Panel title="Explore with demo data" subtitle="The Copper Table · a fictional Newcastle restaurant">
-          <ul className="mb-4 space-y-1.5 text-[12px] text-ink-2">
-            <li>· Two months of sales across dine-in, collection and two delivery platforms</li>
-            <li>· 40+ supplier invoices with a chicken and frying-oil price rise</li>
-            <li>· A restaurant-funded delivery promotion, waste logs and rotas</li>
-            <li>· Clearly labelled as demo data throughout</li>
-          </ul>
-          <LoadDemoButton />
-        </Panel>
-        <Panel title="Start with your own data" subtitle="Creates an empty workspace; import CSVs and invoices next">
-          <CreateWorkspaceForm />
-        </Panel>
-      </div>
+    <div className="max-w-[720px]">
+      <PageHeader title="Overview" description={`${name} has no sales yet. Import these files to see your margins.`} />
+      <Panel pad={false}>
+        <ol className="divide-y divide-[var(--rule)]">
+          {steps.map(([t, d], i) => (
+            <li key={t} className="flex gap-4 px-5 py-4">
+              <span className="num mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-surface-3 text-[12px] font-semibold text-ink-2">{i + 1}</span>
+              <div>
+                <div className="text-[14px] font-medium text-ink">{t}</div>
+                <div className="mt-0.5 text-[13px] text-muted">{d}</div>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-5 py-4">
+          <span className="text-[13px] text-muted">Want to look around first? Open the sample restaurant from the switcher.</span>
+          <Button href="/data" variant="primary">Import files</Button>
+        </div>
+      </Panel>
     </div>
   );
 }

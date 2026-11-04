@@ -9,7 +9,8 @@ export async function removeDemo() {
   await query(`delete from businesses where is_demo = true`);
 }
 
-export async function loadDemo(): Promise<{ businessId: string; counts: Record<string, number> }> {
+/** Load the sample restaurant. With an owner, it replaces only that user's own sample and is added to their workspaces. */
+export async function loadDemo(ownerUserId?: string): Promise<{ businessId: string; counts: Record<string, number> }> {
   const data = generateDemo();
   const held = (d: string) => d.slice(0, 10) >= HELD_BACK_DAY;
   const orders = data.orders.filter((o) => !held(o.at));
@@ -17,13 +18,14 @@ export async function loadDemo(): Promise<{ businessId: string; counts: Record<s
   const labour = data.labour.filter((l) => !held(l.date));
 
   return tx(async (t) => {
-    await t.query(`delete from businesses where is_demo = true`);
+    if (ownerUserId) await t.query(`delete from businesses where is_demo = true and id in (select business_id from memberships where user_id = $1)`, [ownerUserId]);
+    else await t.query(`delete from businesses where is_demo = true`);
     const bid = randomUUID();
     await t.query(
       `insert into businesses (id, name, location, vat_registered, vat_rate, prices_include_vat, is_demo) values ($1,$2,$3,true,20,true,true)`,
       [bid, DEMO_NAME, "Newcastle upon Tyne, UK"],
     );
-    await t.query(`insert into users (business_id, email, display_name, role) values ($1, 'owner@coppertable.demo', 'Demo Owner', 'owner')`, [bid]);
+    if (ownerUserId) await t.query(`insert into memberships (user_id, business_id, role) values ($1,$2,'owner')`, [ownerUserId, bid]);
 
     const srcIds: Record<string, string> = {};
     const sources: [string, string][] = [

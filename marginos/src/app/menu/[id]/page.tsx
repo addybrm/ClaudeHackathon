@@ -27,7 +27,7 @@ export default async function MenuItemPage({ params, searchParams }: { params: P
       <div className="mb-2 text-[12px] text-muted"><Link href={`/menu?period=${key}`} className="hover:text-ink">Menu analysis</Link> / {item.category}</div>
       <PageHeader
         title={item.name}
-        description={<>In-house {gbp2(item.priceGross)}{item.deliveryPriceGross !== null && <> · delivery platforms {gbp2(item.deliveryPriceGross)}</>} · VAT inclusive. Packaging {gbp2(item.packagingCost)}{item.packagingIsEstimate && " (estimate)"} on collection and delivery.</>}
+        description={<>In-house {gbp2(item.priceGross)}{item.deliveryPriceGross !== null && <>, delivery platforms {gbp2(item.deliveryPriceGross)}</>}, VAT inclusive. Packaging {gbp2(item.packagingCost)}{item.packagingIsEstimate && " (estimate)"} on collection and delivery.</>}
         actions={<PeriodPicker value={key} available={available} compareLabel={d.previousPeriod.label} />}
       />
 

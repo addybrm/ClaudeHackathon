@@ -53,8 +53,8 @@ export const costSourceLabel: Record<string, string> = {
 };
 
 export const quadrantLabel: Record<string, string> = {
-  high_volume_high_contribution: "High volume · high contribution",
-  high_volume_low_contribution: "High volume · low contribution",
-  low_volume_high_contribution: "Low volume · high contribution",
-  low_volume_low_contribution: "Low volume · low contribution",
+  high_volume_high_contribution: "High volume, high contribution",
+  high_volume_low_contribution: "High volume, low contribution",
+  low_volume_high_contribution: "Low volume, high contribution",
+  low_volume_low_contribution: "Low volume, low contribution",
 };

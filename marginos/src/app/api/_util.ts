@@ -12,7 +12,7 @@ export class HttpError extends Error {
 
 export async function requireBusiness() {
   const b = await getActiveBusiness();
-  if (!b) throw new HttpError("No business yet — load the demo restaurant or create a workspace first.", 409);
+  if (!b) throw new HttpError("Sign in and open a restaurant first.", 401);
   return b;
 }
 
