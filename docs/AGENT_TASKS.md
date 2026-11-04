@@ -15,7 +15,8 @@ Agents cannot message each other directly, so this file is the hand-off point. E
 
 ## CODEX: frontend (`/src`, root config)
 
-- [ ] **C1 Live data by default.** Set `VITE_USE_API=true` in `.env.example` and `.env`. Remove the hardcoded USD/EUR datasets, or show them only behind an explicit offline mode labelled "offline sample". Read the currency from `restaurant.currency`.
+- [x] **C1 Live data by default** *(done by Claude in the 2026-11-04 UI redesign: `.env.example` now sets `VITE_USE_API=true`, GBP formatting, v2 field mapping, real trend chart, real restaurant name; offline sample data remains as the fallback when the API is unreachable).*
+- [ ] ~~C1 original wording:~~ Set `VITE_USE_API=true` in `.env.example` and `.env`. Remove the hardcoded USD/EUR datasets, or show them only behind an explicit offline mode labelled "offline sample". Read the currency from `restaurant.currency`.
 - [ ] **C2 Advisor.** Render `label` as a badge ("Demo advisor: not live AI" / "Live Claude API"), and `notice` when present. Render `answer` line breaks. When `scenario` is present, show a small before/after card (`baseline` vs `scenario`, `weekly_gross_profit_change`). Suggested prompt chips: "Why is my profit falling?", "Which dishes should I promote?", "What if cod goes up 10%?", "What if I raise Cod & Chips to £17.50?", "Where is food being wasted?".
 - [ ] **C3 Dashboard v2.** KPI cards from `kpis` (revenue, ingredient spend, gross profit, gross margin, food cost % vs target, waste, leakage) with `changes_vs_previous_period_pct`. Add a `trend` chart (revenue vs ingredient spend; margin line), a date-range picker (`start`/`end`) and a location selector (`/api/locations`). Add a leakage card from `profit_leakage.by_category`, with drill-down to `/api/leakage`. Add a supplier price changes list showing affected dishes, and a comparison table from `/api/suppliers/comparison`.
 - [ ] **C4 Invoice review step (FR4, required).** After upload, show the draft as an editable table: ingredient dropdown (`/api/ingredients`), quantity, unit, unit price and total. Show per-line `issues` in red, `header_issues`, and `flagged` price rises. Show `notice` for images. Enable **Confirm** only when every issue is resolved, then `POST /api/invoices` and show the returned `price_increase_alerts`. Show a processing spinner (NFR02). Reject anything other than `.csv/.pdf/.png/.jpg/.jpeg/.webp` or over 5 MB client-side.
@@ -42,3 +43,7 @@ Agents cannot message each other directly, so this file is the hand-off point. E
 - [x] Backward-compatible fields for the v1 frontend (`advisor_mode`, `weekly_*`, `menu_price`, `unmatched_lines`, ...)
 - [ ] Review Codex and Copilot changes against this board before the final demo
 - [ ] Capture real screenshots for the video once C1–C3 are done
+
+## UI redesign (2026-11-04, Claude, at the user's request)
+
+New visual system in `src/styles.css` and the MarginOS logo in `src/Logo.tsx` and `public/`. Menu "Add item" uses an accessible dialog instead of `window.prompt`; page is kept in the URL hash. **Codex: please build on these tokens and components rather than re-skinning.** C2–C9 above are still open.
