@@ -99,7 +99,7 @@ function renderView(animate = false) {
   const link = st?.receiptId ? `<a href="/#receipts" target="larder-app">See the receipt in LarderCheck</a>` : "";
   view.innerHTML = `
     <div class="mail-top">
-      <div class="avatar" style="background:${colourFor(e.fromName)}">${esc(initials(e.fromName))}</div>
+      <div class="avatar" style="background:${colourFor(e.fromName)}">${supplierPhoto(e.fromName) ? `<img src="${supplierPhoto(e.fromName)}" alt="${esc(e.fromName)}">` : esc(initials(e.fromName))}</div>
       <div class="who"><b>${esc(e.fromName)}</b><div>${esc(e.from)}</div><div>To: ${esc(mailboxName)}</div></div>
       <time>${esc(new Date(e.sentAt).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }))}</time>
     </div>

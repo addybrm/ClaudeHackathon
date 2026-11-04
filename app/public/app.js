@@ -13,7 +13,7 @@ const STATUS = {
   unverified: ["bad", "No email found"],
 };
 
-const APP_ICON = `<span class="app-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h6M5.5 2.5v2L4 6.5v6.2c0 .5.4.8.8.8h6.4c.4 0 .8-.3.8-.8V6.5L10.5 4.5v-2"/><path d="M4 9h8"/></svg></span>`;
+const APP_ICON = `<span class="app-icon" aria-hidden="true"><img src="/media/app-larder.jpg" alt=""></span>`;
 
 // ---------- motion helpers ----------
 function countTo(el, to, fmt) {
@@ -103,7 +103,7 @@ function renderSidebarStorage() {
   if (ui.storage && !counts.has(ui.storage)) ui.storage = "";
   const item = (value, label, count, dot) =>
     `<button type="button" class="side-item ${ui.storage === value ? "active" : ""}" data-storage="${esc(value)}">
-      ${dot ? `<span class="dot" style="background:${dot}"></span>` : `<span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="2.5" width="11" height="11" rx="2.5"/></svg></span>`}
+      <span class="ico"><img src="${dot ? storagePhoto(value) : "/media/nav-stock.jpg"}" alt=""></span>
       ${esc(label)}<span class="count">${count || ""}</span>
     </button>`;
   $("side-storage").innerHTML = areas.length
@@ -218,12 +218,12 @@ function renderInventory() {
       const useBy = `${shortDate(b.expiryDate)}<div class="sub">${relDays(b.daysToExpiry)}${b.expirySource === "printed" ? "" : " (est.)"}</div>`;
       const waste = b.dailyUse && b.wasteQty > 0 ? `${qty(b.wasteQty)} ${esc(b.unit)}<div class="sub">${gbp(b.wasteValue)}</div>` : `<span class="sub">—</span>`;
       return `<tr class="${b.expired ? "expired" : ""}">
-        <td class="ingredient"><strong>${esc(b.ingredient)}</strong><div class="sub">${esc(b.supplier)}</div>${flagged}</td>
+        <td class="ingredient"><div class="ing-row">${ingredientPhoto(b.ingredient) ? `<img class="ing-photo" src="${ingredientPhoto(b.ingredient)}" alt="" loading="lazy">` : ""}<div><strong>${esc(b.ingredient)}</strong><div class="sub">${esc(b.supplier)}</div>${flagged}</div></div></td>
         <td class="nowrap">${statusPill}</td>
         <td class="num">${qty(b.quantity)} ${esc(b.unit)}<div class="sub">${gbp(b.unitPrice)} a ${esc(b.unit === "each" ? "piece" : b.unit)}</div></td>
         <td class="num">${b.status === "incoming" ? `<span class="sub">—</span>` : `${qty(b.leftNow)} ${esc(b.unit)}`}</td>
         <td class="nowrap">${useBy}</td>
-        <td class="nowrap"><span class="store"><i style="background:${storageColour(b.storage)}"></i>${esc(b.storage)}</span></td>
+        <td class="nowrap"><span class="store"><img src="${storagePhoto(b.storage)}" alt="">${esc(b.storage)}</span></td>
         <td class="num"><input class="use-input" type="number" min="0" step="any" value="${b.dailyUse}" data-use="${esc(b.ingredient)}" aria-label="How much ${esc(b.ingredient)} you use a day, in ${esc(b.unit)}"></td>
         <td>${meterHtml(b)}</td>
         <td class="num">${waste}</td>

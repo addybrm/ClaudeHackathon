@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <meta name="color-scheme" content="light">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LarderCheck</title>
@@ -12,15 +13,13 @@
       <header class="titlebar">
         <div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="title">
-          <span class="app-icon" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h6M5.5 2.5v2L4 6.5v6.2c0 .5.4.8.8.8h6.4c.4 0 .8-.3.8-.8V6.5L10.5 4.5v-2"/><path d="M4 9h8"/></svg>
-          </span>
+          <span class="app-icon" aria-hidden="true"><img src="/media/app-larder.jpg" alt="" loading="lazy"></span>
           LarderCheck <span class="sub" id="kitchen"></span>
         </div>
         <div class="toolbar">
           <span id="ai-pill" class="pill"></span>
           <a class="btn" href="/inbox.html" target="larder-inbox" rel="noopener">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="m2.5 4.5 5.5 4 5.5-4"/></svg>
+            <img class="btn-photo" src="/media/nav-inbox.jpg" alt="">
             Supplier inbox
           </a>
         </div>
@@ -30,10 +29,10 @@
         <nav class="sidebar" aria-label="Sections">
           <div class="side-group">
             <div class="side-head">Kitchen</div>
-            <a class="side-item" href="#overview"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 7 8 2.5 13.5 7v6a.5.5 0 0 1-.5.5H10V10H6v3.5H3a.5.5 0 0 1-.5-.5Z"/></svg></span>Overview</a>
-            <a class="side-item" href="#add"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v7M5 6.5l3 3 3-3"/><path d="M2.5 10v2.5a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V10"/></svg></span>Add receipts</a>
-            <a class="side-item" href="#receipts"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M4 1.5h8v13l-2-1.2-2 1.2-2-1.2-2 1.2Z"/><path d="M6 5h4M6 8h4"/></svg></span>Receipts<span class="count" id="c-receipts"></span></a>
-            <a class="side-item" href="#stock"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h11M2.5 12h11"/></svg></span>Stock<span class="count" id="c-stock"></span></a>
+            <a class="side-item" href="#overview"><span class="ico"><img src="/media/nav-overview.jpg" alt="" loading="lazy"></span>Overview</a>
+            <a class="side-item" href="#add"><span class="ico"><img src="/media/nav-add.jpg" alt="" loading="lazy"></span>Add receipts</a>
+            <a class="side-item" href="#receipts"><span class="ico"><img src="/media/nav-receipts.jpg" alt="" loading="lazy"></span>Receipts<span class="count" id="c-receipts"></span></a>
+            <a class="side-item" href="#stock"><span class="ico"><img src="/media/nav-stock.jpg" alt="" loading="lazy"></span>Stock<span class="count" id="c-stock"></span></a>
           </div>
           <div class="side-group">
             <div class="side-head">Stored in</div>
@@ -59,7 +58,7 @@
             <div class="add-grid">
               <label class="drop" id="drop">
                 <input type="file" id="file" accept="image/jpeg,image/png,image/webp,application/pdf" multiple>
-                <svg class="tray" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 6h16l8 8v28a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" opacity=".35"/><path d="M30 6v8h8" opacity=".35"/><path d="M24 20v14M18 28l6 6 6-6"/></svg>
+                <img class="tray" src="/media/drop-delivery.jpg" alt="" aria-hidden="true">
                 <strong id="drop-title">Drop receipts here</strong>
                 <span id="drop-sub">or click to choose up to 10 photos or PDFs</span>
               </label>
@@ -114,6 +113,7 @@
             </div>
             <div class="foot">
               <span>"Left now" and "Used in time" assume you use the "Use a day" amount every day, oldest first. Change it to match what you sell.</span>
+              <a class="credits-link" href="/credits.html" target="_blank" rel="noopener">Photo credits</a>
               <button class="btn plain" id="reset">Start over</button>
             </div>
           </section>

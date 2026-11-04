@@ -39,6 +39,21 @@ function colourFor(name) {
 }
 
 // Each kind of storage gets its own colour so fridges are easy to tell apart.
+// Real photos (Wikimedia Commons, freely licensed; credits in /media/credits.json and /credits.html).
+const PHOTO_INGREDIENTS = new Set(["whole-milk","double-cream","free-range-eggs","mature-cheddar","beef-mince","lamb-shoulder","cod-loin","haddock-fillet","king-prawns-frozen","vine-tomatoes","little-gem-lettuce","brown-onions","maris-piper-potatoes","chestnut-mushrooms","fresh-basil","arborio-rice","extra-virgin-olive-oil","unsalted-butter","chicken-breast","plain-flour","smoked-back-bacon","tinned-chopped-tomatoes"]);
+function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+function ingredientPhoto(name) { const k = slug(name); return PHOTO_INGREDIENTS.has(k) ? `/media/ing-${k}.jpg` : null; }
+function storagePhoto(name) {
+  const n = String(name).toLowerCase();
+  const k = n.includes("dairy") ? "dairy" : n.includes("meat") ? "meat" : n.includes("fish") ? "fish" : n.includes("produce") ? "produce" : n.includes("freez") ? "frozen" : "dry";
+  return `/media/store-${k}.jpg`;
+}
+function supplierPhoto(name) {
+  const n = String(name).toLowerCase();
+  const k = n.includes("holystone") || n.includes("meat") ? "holystone-meats" : n.includes("wansbeck") || n.includes("green") ? "wansbeck-greens" : n.includes("brackenfield") || n.includes("dairy") ? "brackenfield-dairy" : n.includes("coldharbour") || n.includes("fish") ? "coldharbour-fish" : null;
+  return k ? `/media/sup-${k}.jpg` : null;
+}
+
 function storageColour(name) {
   const n = String(name).toLowerCase();
   if (n.includes("dairy")) return "#0a84ff";
