@@ -7,23 +7,29 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="wrap">
-    <header class="top">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true">✉</div>
-        <div>
-          <h1>Supplier inbox</h1>
-          <p id="mailbox">Fictional order emails</p>
+  <div class="desktop">
+    <div class="window">
+      <header class="titlebar">
+        <div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="title">
+          <span class="app-icon mail" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="m2.5 4.5 5.5 4 5.5-4"/></svg>
+          </span>
+          Inbox <span class="sub" id="mailbox"></span>
         </div>
+        <div class="toolbar">
+          <span class="pill info">Demo emails</span>
+          <a class="btn" href="/" target="larder-app">Back to LarderCheck</a>
+        </div>
+      </header>
+      <div class="mail-layout">
+        <nav class="sidebar" aria-label="Mailboxes">
+          <div class="side-head">Mailboxes</div>
+          <div id="boxes"></div>
+        </nav>
+        <ul class="mail-list" id="list" aria-label="Emails"></ul>
+        <article class="mail-view" id="view" aria-live="polite"></article>
       </div>
-      <div class="top-actions">
-        <span class="pill info">Demo mailbox: all emails are made up</span>
-        <a class="btn" href="/" target="larder-app">Back to LarderCheck</a>
-      </div>
-    </header>
-    <div class="mail">
-      <ul class="mail-list" id="list" aria-label="Emails"></ul>
-      <article class="mail-view" id="view" aria-live="polite"></article>
     </div>
   </div>
   <script src="common.js"></script>

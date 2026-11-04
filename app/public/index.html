@@ -7,97 +7,121 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="wrap">
-    <header class="top">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true">LC</div>
-        <div>
-          <h1>LarderCheck</h1>
-          <p id="subtitle">Loading…</p>
+  <div class="desktop">
+    <div class="window">
+      <header class="titlebar">
+        <div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="title">
+          <span class="app-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h6M5.5 2.5v2L4 6.5v6.2c0 .5.4.8.8.8h6.4c.4 0 .8-.3.8-.8V6.5L10.5 4.5v-2"/><path d="M4 9h8"/></svg>
+          </span>
+          LarderCheck <span class="sub" id="kitchen"></span>
         </div>
+        <div class="toolbar">
+          <span id="ai-pill" class="pill"></span>
+          <a class="btn" href="/inbox.html" target="larder-inbox" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="m2.5 4.5 5.5 4 5.5-4"/></svg>
+            Supplier inbox
+          </a>
+        </div>
+      </header>
+
+      <div class="layout">
+        <nav class="sidebar" aria-label="Sections">
+          <div class="side-group">
+            <div class="side-head">Kitchen</div>
+            <a class="side-item" href="#overview"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 7 8 2.5 13.5 7v6a.5.5 0 0 1-.5.5H10V10H6v3.5H3a.5.5 0 0 1-.5-.5Z"/></svg></span>Overview</a>
+            <a class="side-item" href="#add"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v7M5 6.5l3 3 3-3"/><path d="M2.5 10v2.5a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V10"/></svg></span>Add receipts</a>
+            <a class="side-item" href="#receipts"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M4 1.5h8v13l-2-1.2-2 1.2-2-1.2-2 1.2Z"/><path d="M6 5h4M6 8h4"/></svg></span>Receipts<span class="count" id="c-receipts"></span></a>
+            <a class="side-item" href="#stock"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h11M2.5 12h11"/></svg></span>Stock<span class="count" id="c-stock"></span></a>
+          </div>
+          <div class="side-group">
+            <div class="side-head">Stored in</div>
+            <div id="side-storage" style="display: contents"></div>
+          </div>
+        </nav>
+
+        <main class="main">
+          <section id="overview" class="hello">
+            <h1 id="today">Today</h1>
+            <p class="lede" id="lede">Loading your kitchen…</p>
+            <div id="banner" class="banner" hidden></div>
+            <div class="tiles">
+              <div class="tile"><div class="label">Stock on hand</div><div class="value" id="t-stock">£0</div><div class="sub" id="t-stock-sub">&nbsp;</div></div>
+              <div class="tile"><div class="label">On its way</div><div class="value" id="t-incoming">£0</div><div class="sub" id="t-incoming-sub">&nbsp;</div></div>
+              <div class="tile" id="tile-waste"><div class="label">Likely to go to waste</div><div class="value" id="t-waste">£0</div><div class="sub" id="t-waste-sub">&nbsp;</div></div>
+              <div class="tile" id="tile-review"><div class="label">Lines to check</div><div class="value" id="t-review">0</div><div class="sub">Where the receipt and email disagree</div></div>
+            </div>
+          </section>
+
+          <section id="add">
+            <div class="section-head"><div><h2>Add receipts</h2><p>Photos or PDFs of delivery notes and invoices. Claude reads every line.</p></div></div>
+            <div class="add-grid">
+              <label class="drop" id="drop">
+                <input type="file" id="file" accept="image/jpeg,image/png,image/webp,application/pdf" multiple>
+                <svg class="tray" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 6h16l8 8v28a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" opacity=".35"/><path d="M30 6v8h8" opacity=".35"/><path d="M24 20v14M18 28l6 6 6-6"/></svg>
+                <strong id="drop-title">Drop receipts here</strong>
+                <span id="drop-sub">or click to choose up to 10 photos or PDFs</span>
+              </label>
+              <div class="group">
+                <div class="group-head"><span>Try a sample receipt</span><button class="btn plain" id="all-samples">Add all</button></div>
+                <ul class="rows" id="samples"></ul>
+              </div>
+            </div>
+          </section>
+
+          <section id="receipts">
+            <div class="section-head"><div><h2>Receipts</h2><p>Each one is checked against the supplier's confirmation email.</p></div></div>
+            <div class="receipts" id="receipt-list"></div>
+          </section>
+
+          <section id="stock">
+            <div class="section-head">
+              <div><h2>Stock</h2><p>Everything you've bought or have on order, and how much should get used before it goes off.</p></div>
+              <div class="controls">
+                <div class="segmented" role="group" aria-label="Show" id="f-status">
+                  <button type="button" data-status="" aria-pressed="true">All</button>
+                  <button type="button" data-status="in_stock" aria-pressed="false">In stock</button>
+                  <button type="button" data-status="incoming" aria-pressed="false">On its way</button>
+                  <button type="button" data-status="risk" aria-pressed="false">At risk</button>
+                </div>
+                <label class="search">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>
+                  <input type="search" id="f-search" placeholder="Search" aria-label="Search ingredients">
+                </label>
+              </div>
+            </div>
+            <div class="list">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Ingredient</th>
+                      <th>Status</th>
+                      <th class="num">Bought</th>
+                      <th class="num">Left now</th>
+                      <th>Use by</th>
+                      <th>Stored in</th>
+                      <th class="num">Use a day</th>
+                      <th>Used in time</th>
+                      <th class="num">Waste</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inventory"></tbody>
+                </table>
+              </div>
+              <div class="empty" id="inv-empty" hidden>Nothing here yet. Add a receipt and your stock appears here.</div>
+            </div>
+            <div class="foot">
+              <span>"Left now" and "Used in time" assume you use the "Use a day" amount every day, oldest first. Change it to match what you sell.</span>
+              <button class="btn plain" id="reset">Start over</button>
+            </div>
+          </section>
+        </main>
       </div>
-      <div class="top-actions">
-        <span id="ai-pill" class="pill"></span>
-        <a class="btn" href="/inbox.html" target="larder-inbox" rel="noopener">Open supplier inbox ↗</a>
-      </div>
-    </header>
-
-    <div id="banner" class="banner" hidden></div>
-
-    <section class="tiles" aria-label="Summary">
-      <div class="tile"><div class="label">Stock on hand (est.)</div><div class="value" id="t-stock">£0</div><div class="sub" id="t-stock-sub">&nbsp;</div></div>
-      <div class="tile"><div class="label">On its way</div><div class="value" id="t-incoming">£0</div><div class="sub" id="t-incoming-sub">&nbsp;</div></div>
-      <div class="tile" id="tile-waste"><div class="label">Projected waste</div><div class="value" id="t-waste">£0</div><div class="sub" id="t-waste-sub">&nbsp;</div></div>
-      <div class="tile" id="tile-review"><div class="label">Lines to check</div><div class="value" id="t-review">0</div><div class="sub">Receipt doesn't match the email</div></div>
-    </section>
-
-    <div class="grid-2">
-      <section class="card" aria-labelledby="add-h">
-        <div class="card-head">
-          <div><h2 id="add-h">Add receipts</h2><p>Photos or PDFs of delivery notes and invoices</p></div>
-        </div>
-        <label class="drop" id="drop">
-          <input type="file" id="file" accept="image/jpeg,image/png,image/webp,application/pdf" multiple>
-          <strong>Drop receipts here or tap to choose</strong>
-          <span>JPEG, PNG, WebP or PDF, up to 10 at a time</span>
-        </label>
-        <div class="progress" id="progress" aria-live="polite"></div>
-        <div class="samples">
-          <h3>Sample receipts (fictional) <button class="btn small" id="all-samples">Add all</button></h3>
-          <ul class="sample-list" id="samples"></ul>
-        </div>
-      </section>
-
-      <section class="card" aria-labelledby="rec-h">
-        <div class="card-head">
-          <div><h2 id="rec-h">Receipts checked against emails</h2><p>Each receipt is matched to the supplier's confirmation email</p></div>
-        </div>
-        <div class="receipts" id="receipts"></div>
-      </section>
-    </div>
-
-    <section class="card" aria-labelledby="inv-h">
-      <div class="card-head">
-        <div><h2 id="inv-h">Stock list</h2><p>Every ingredient bought or on its way, with where it's kept and how much should get used before it expires</p></div>
-        <div class="filters">
-          <input type="search" id="f-search" placeholder="Search ingredients" aria-label="Search ingredients">
-          <select id="f-storage" aria-label="Storage"><option value="">All storage</option></select>
-          <select id="f-status" aria-label="Status">
-            <option value="">All stock</option>
-            <option value="in_stock">In stock</option>
-            <option value="incoming">On its way</option>
-            <option value="risk">At risk of waste</option>
-          </select>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Ingredient</th>
-              <th>Status</th>
-              <th class="num">Bought</th>
-              <th class="num">Left now</th>
-              <th class="num">Price</th>
-              <th>Arrives</th>
-              <th>Expires</th>
-              <th>Stored in</th>
-              <th class="num">Use / day</th>
-              <th>Used before expiry</th>
-              <th class="num">Waste</th>
-            </tr>
-          </thead>
-          <tbody id="inventory"></tbody>
-        </table>
-      </div>
-      <div class="empty" id="inv-empty" hidden>No stock yet. Add a receipt to start.</div>
-    </section>
-
-    <div class="foot">
-      <span>"Left now" and "Used before expiry" assume the kitchen uses the "Use / day" amount every day, oldest expiry first. Change "Use / day" to match your sales.</span>
-      <button class="btn small ghost" id="reset">Reset demo</button>
     </div>
   </div>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
   <script src="common.js"></script>
   <script src="app.js"></script>
 </body>

@@ -6,7 +6,7 @@ import express from "express";
 import multer from "multer";
 
 import { addDays, diffDays, isIsoDate } from "./lib/dates.js";
-import { emailBody } from "./lib/emails.js";
+import { emailParts } from "./lib/emails.js";
 import { ExtractionError, MODEL, SUPPORTED_TYPES, extractWithClaude, normalise } from "./lib/extract.js";
 import { forecast } from "./lib/forecast.js";
 import { compareLines, findEmail, receiptStatus } from "./lib/reconcile.js";
@@ -244,7 +244,7 @@ app.get("/api/state", (_req, res) => res.json(snapshot()));
 app.get("/api/emails", (_req, res) =>
   res.json({
     mailbox,
-    emails: emails.map((e) => ({ ...e, body: emailBody(e, catalog.restaurant) })),
+    emails: emails.map((e) => ({ ...e, parts: emailParts(e, catalog.restaurant) })),
     statuses: emailStatuses(),
     today: TODAY,
   }),

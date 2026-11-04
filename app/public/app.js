@@ -1,167 +1,247 @@
 let state = null;
 let emailMeta = new Map(); // email id -> subject
 const $ = (id) => document.getElementById(id);
+const ui = { status: "", storage: "", q: "" };
+const seenReceipts = new Set();
+const shownPct = new Map(); // batch id -> % currently drawn, so bars animate from where they were
+const tileNow = new Map(); // tile id -> number currently shown
+let firstRender = true;
 
-const STATUS_PILL = {
-  verified: ["good", "✓ Matches email"],
-  discrepancies: ["warn", "Doesn't match email"],
+const STATUS = {
+  verified: ["good", "Matches email"],
+  discrepancies: ["warn", "Needs checking"],
   unverified: ["bad", "No email found"],
 };
+
+const APP_ICON = `<span class="app-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h6M5.5 2.5v2L4 6.5v6.2c0 .5.4.8.8.8h6.4c.4 0 .8-.3.8-.8V6.5L10.5 4.5v-2"/><path d="M4 9h8"/></svg></span>`;
+
+// ---------- motion helpers ----------
+function countTo(el, to, fmt) {
+  const from = tileNow.get(el.id) ?? 0;
+  tileNow.set(el.id, to);
+  if (reduceMotion || from === to) {
+    el.textContent = fmt(to);
+    return;
+  }
+  const start = performance.now();
+  const dur = 800;
+  const token = (el._token = Symbol());
+  const step = (t) => {
+    if (el._token !== token) return;
+    const p = Math.min(1, (t - start) / dur);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(from + (to - from) * e);
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function toast(title, body, kind = "") {
+  const el = document.createElement("div");
+  el.className = `toast ${kind}`;
+  el.innerHTML = `${APP_ICON}<b>${esc(title)}</b><span>${esc(body)}</span>`;
+  $("toasts").prepend(el);
+  const dismiss = () => {
+    el.classList.add("out");
+    el.addEventListener("animationend", () => el.remove(), { once: true });
+    if (reduceMotion) el.remove();
+  };
+  el.addEventListener("click", dismiss);
+  setTimeout(dismiss, 5200);
+}
 
 // ---------- rendering ----------
 function render() {
   const s = state;
-  $("subtitle").textContent = `${s.restaurant} · ${shortDate(s.today)}`;
-  const pill = $("ai-pill");
-  if (s.ai.forceDemo) [pill.className, pill.textContent] = ["pill warn", "Demo mode: pre-read samples"];
-  else if (s.ai.hasKey) [pill.className, pill.textContent] = ["pill good", `Reading with ${s.ai.model}`];
-  else [pill.className, pill.textContent] = ["pill warn", "No API key: samples only"];
-
   const t = s.totals;
-  $("t-stock").textContent = gbp(t.stockValue, 0);
-  $("t-stock-sub").textContent = `${s.inventory.filter((b) => b.status === "in_stock" && !b.expired).length} batches in stock`;
-  $("t-incoming").textContent = gbp(t.incomingValue, 0);
+  $("kitchen").textContent = `— ${s.restaurant}`;
+  $("today").textContent = longDate(s.today);
+
+  const live = s.inventory.filter((b) => b.status === "in_stock" && !b.expired);
+  if (!s.inventory.length) {
+    $("lede").textContent = "Add your first receipt and LarderCheck builds your stock list from it.";
+  } else {
+    const parts = [`You have about ${gbp(t.stockValue, 0)} of stock in the kitchen`];
+    if (t.incomingValue) parts[0] += ` and ${gbp(t.incomingValue, 0)} on its way`;
+    parts[0] += ".";
+    parts.push(
+      t.projectedWaste > 0
+        ? `${t.wasteItems} ${t.wasteItems === 1 ? "batch is" : "batches are"} likely to go off before you use ${t.wasteItems === 1 ? "it" : "them"}, about ${gbp(t.projectedWaste, 0)}.`
+        : "Everything should get used before it goes off.",
+    );
+    if (t.needsReview) parts.push(`${t.needsReview} receipt ${t.needsReview === 1 ? "line needs" : "lines need"} checking.`);
+    $("lede").textContent = parts.join(" ");
+  }
+
+  const pill = $("ai-pill");
+  if (s.ai.forceDemo) [pill.className, pill.textContent] = ["pill warn", "Demo mode"];
+  else if (s.ai.hasKey) [pill.className, pill.textContent] = ["pill good", "Claude is reading receipts"];
+  else [pill.className, pill.textContent] = ["pill warn", "Samples only"];
+
+  countTo($("t-stock"), t.stockValue, (v) => gbp(v, 0));
+  $("t-stock-sub").textContent = `${live.length} ${live.length === 1 ? "batch" : "batches"} in the kitchen`;
+  countTo($("t-incoming"), t.incomingValue, (v) => gbp(v, 0));
   $("t-incoming-sub").textContent = t.nextArrival ? `Next delivery ${shortDate(t.nextArrival)}` : "Nothing on order";
-  $("t-waste").textContent = gbp(t.projectedWaste, 0);
-  $("t-waste-sub").textContent = t.wasteItems ? `${t.wasteItems} batches won't be used up in time` : "Everything should get used in time";
+  countTo($("t-waste"), t.projectedWaste, (v) => gbp(v, 0));
+  $("t-waste-sub").textContent = t.wasteItems ? `Across ${t.wasteItems} ${t.wasteItems === 1 ? "batch" : "batches"}` : "Nothing expected to go off";
   $("tile-waste").classList.toggle("bad", t.projectedWaste > 0);
-  $("t-review").textContent = t.needsReview;
+  countTo($("t-review"), t.needsReview, (v) => String(Math.round(v)));
   $("tile-review").classList.toggle("warn", t.needsReview > 0);
 
+  $("c-receipts").textContent = s.receipts.length || "";
+  $("c-stock").textContent = s.inventory.length || "";
+  renderSidebarStorage();
   renderReceipts();
-  renderStorageFilter();
   renderInventory();
+  firstRender = false;
+}
+
+function renderSidebarStorage() {
+  const counts = new Map();
+  for (const b of state.inventory) counts.set(b.storage, (counts.get(b.storage) ?? 0) + 1);
+  const areas = [...counts.keys()].sort();
+  if (ui.storage && !counts.has(ui.storage)) ui.storage = "";
+  const item = (value, label, count, dot) =>
+    `<button type="button" class="side-item ${ui.storage === value ? "active" : ""}" data-storage="${esc(value)}">
+      ${dot ? `<span class="dot" style="background:${dot}"></span>` : `<span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="2.5" width="11" height="11" rx="2.5"/></svg></span>`}
+      ${esc(label)}<span class="count">${count || ""}</span>
+    </button>`;
+  $("side-storage").innerHTML = areas.length
+    ? item("", "Everywhere", state.inventory.length) + areas.map((a) => item(a, a, counts.get(a), storageColour(a))).join("")
+    : `<div class="side-item" style="color:var(--faint);cursor:default">Nothing stored yet</div>`;
 }
 
 function renderReceipts() {
-  const el = $("receipts");
+  const el = $("receipt-list");
   if (!state.receipts.length) {
-    el.innerHTML = `<div class="empty">No receipts yet. Add one on the left, or try a sample.</div>`;
+    el.innerHTML = `<div class="empty">No receipts yet. Drop one above or try a sample.</div>`;
     return;
   }
   const order = { discrepancies: 0, unverified: 1, verified: 2 };
   const receipts = [...state.receipts].sort((a, b) => order[a.status] - order[b.status] || b.uploadedAt.localeCompare(a.uploadedAt));
-  el.innerHTML = receipts.map(receiptHtml).join("");
+  el.innerHTML = receipts.map((r) => receiptHtml(r, !firstRender && !seenReceipts.has(r.id))).join("");
+  receipts.forEach((r) => seenReceipts.add(r.id));
 }
 
-function receiptHtml(r) {
-  const [cls, label] = STATUS_PILL[r.status];
+function receiptHtml(r, isNew) {
+  const [cls, label] = STATUS[r.status];
   const ex = r.extraction;
-  const source =
-    r.source === "claude"
-      ? `Read by Claude (${esc(r.model)})`
-      : `Pre-read sample result: ${esc(r.sourceNote)}`;
-  const emailLink = r.emailId
-    ? `Matched by ${esc(r.matchMethod)} to <a href="/inbox.html#${esc(r.emailId)}" target="larder-inbox">“${esc(emailMeta.get(r.emailId) ?? "email")}”</a>`
-    : "No confirmation email from this supplier for this order";
-  const row = (l) => {
-      const checks = l.issues.length
+  const source = r.source === "claude" ? `Read by Claude (${esc(r.model)})` : `Sample: pre-read result (${esc(r.sourceNote.toLowerCase())})`;
+  const emailLine = r.emailId
+    ? `Checked against <a href="/inbox.html#${esc(r.emailId)}" target="larder-inbox">${esc(emailMeta.get(r.emailId) ?? "the order email")}</a>`
+    : "No order email from this supplier to check against";
+
+  const flags = [
+    ...r.lines.filter((l) => l.issues.length).map((l) => ({
+      title: l.ingredient,
+      text: l.issues.map((i) => i.text).join(". "),
+      bad: l.issues.some((i) => i.code !== "low_confidence"),
+    })),
+    ...r.missingFromReceipt.map((m) => ({ title: m.ingredient, text: `${qty(m.quantity)} ${m.unit} is on the email but not the receipt`, bad: true })),
+  ];
+  const summary = flags.length
+    ? `<ul class="flag-list">${flags.map((f) => `<li class="${f.bad ? "bad" : ""}"><span class="mark">!</span><b>${esc(f.title)}</b><span>${esc(f.text)}</span></li>`).join("")}</ul>`
+    : r.emailId
+      ? `<p class="all-ok"><i>✓</i>All ${r.lines.length} lines match the email</p>`
+      : `<p class="note">${r.lines.length} lines added to stock. With no email to compare, check this one by eye.</p>`;
+
+  const rows = r.lines
+    .map((l) => {
+      const check = l.issues.length
         ? l.issues.map((i) => `<span class="issue ${i.code === "low_confidence" ? "warn" : ""}">${esc(i.text)}</span>`).join("")
         : r.emailId
-          ? `<span class="check-ok">✓ matches</span>`
-          : `<span class="sub">not checked</span>`;
+          ? `<span class="check-ok">✓</span>`
+          : `<span class="sub">—</span>`;
       return `<tr>
-        <td>${esc(l.ingredient)}<div class="sub">${esc(l.rawName)}${l.note ? ` · ${esc(l.note)}` : ""}</div></td>
+        <td>${esc(l.ingredient)}<div class="sub">${esc(l.rawName)}${l.note ? ` (${esc(l.note.toLowerCase())})` : ""}</div></td>
         <td class="num">${qty(l.quantity)} ${esc(l.unit)}</td>
         <td class="num">${gbp(l.unitPrice)}</td>
-        <td>${checks}</td>
+        <td>${check}</td>
       </tr>`;
-  };
-  const missing = r.missingFromReceipt
-    .map(
-      (m) => `<tr><td>${esc(m.ingredient)}</td><td class="num">${qty(m.quantity)} ${esc(m.unit)}</td><td class="num">${gbp(m.unitPrice)}</td>
-        <td><span class="issue">On the email but not on the receipt</span></td></tr>`,
-    )
+    })
     .join("");
-  const table = (body) =>
-    `<div class="table-wrap"><table>
-      <thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Price</th><th>Check</th></tr></thead>
-      <tbody>${body}</tbody>
-    </table></div>`;
-  // Show only the lines that need attention; the rest are one click away.
-  const flagged = r.lines.filter((l) => l.issues.length);
-  const flaggedHtml =
-    flagged.length || missing
-      ? table(flagged.map(row).join("") + missing)
-      : r.emailId
-        ? `<p class="all-ok">✓ All ${r.lines.length} lines match the email</p>`
-        : `<p class="sub">${r.lines.length} lines added to stock without an email to check against</p>`;
   const warnings = ex.warnings.length ? `<ul class="warnings">${ex.warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>` : "";
-  const dup = r.duplicateOf ? `<span class="pill bad">Possible duplicate of another receipt</span>` : "";
-  return `<article class="receipt">
+  const dup = r.duplicateOf ? `<span class="pill bad">Possible duplicate</span>` : "";
+  const facts = [ex.orderRef ? `Order ${esc(ex.orderRef)}` : "No order number", ex.receiptDate ? shortDate(ex.receiptDate) : "No date", gbp(ex.total)].join(", ");
+
+  return `<article class="receipt ${isNew ? "enter" : ""}" data-id="${esc(r.id)}">
     <div class="receipt-head">
-      <h3>${esc(ex.supplier)}</h3>
-      <span class="pill ${cls}">${label}</span>${dup}
-      <span style="flex:1"></span>
-      <button class="btn small ghost" data-delete="${esc(r.id)}" aria-label="Remove receipt from ${esc(ex.supplier)}">Remove</button>
+      <h3>${esc(ex.supplier)}</h3><span class="pill ${cls}">${label}</span>${dup}
+      <span class="spacer"></span>
+      <button class="btn plain" data-delete="${esc(r.id)}" aria-label="Remove the receipt from ${esc(ex.supplier)}">Remove</button>
     </div>
-    <div class="receipt-meta">
-      <span>${ex.orderRef ? `Ref ${esc(ex.orderRef)}` : "No order ref"}</span>
-      <span>${ex.receiptDate ? shortDate(ex.receiptDate) : "No date"}</span>
-      <span>Total ${gbp(ex.total)}</span>
-      <span>${esc(r.fileName)}</span>
-    </div>
-    <div class="receipt-meta"><span>${source}</span><span>${emailLink}</span></div>
-    ${flaggedHtml}
-    <details><summary>Show all ${r.lines.length} lines</summary>${table(r.lines.map(row).join("") + missing)}</details>
+    <p class="receipt-meta">${facts}</p>
+    <p class="receipt-meta">${emailLine}</p>
+    ${summary}
     ${warnings}
+    <details><summary>All ${r.lines.length} lines</summary>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Price</th><th>Email</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+      <p class="receipt-meta" style="margin-top:8px">${source}</p>
+    </details>
   </article>`;
 }
 
-function renderStorageFilter() {
-  const sel = $("f-storage");
-  const current = sel.value;
-  const areas = [...new Set(state.inventory.map((b) => b.storage))].sort();
-  sel.innerHTML = `<option value="">All storage</option>` + areas.map((a) => `<option>${esc(a)}</option>`).join("");
-  if (areas.includes(current)) sel.value = current;
-}
-
 function meterHtml(b) {
-  if (!b.dailyUse) return `<span class="sub">Set use / day</span>`;
+  if (!b.dailyUse) return `<span class="sub">Set "use a day"</span>`;
   const pct = b.pctUsedBeforeExpiry;
   const cls = pct >= 90 ? "good" : pct >= 60 ? "warn" : "bad";
-  return `<div class="meter" title="${qty(b.consumed)} of ${qty(b.quantity)} ${esc(b.unit)} used before it expires">
-    <div class="bar"><div class="fill ${cls}" style="width:${Math.max(2, Math.min(100, pct))}%"></div></div><b>${pct}%</b></div>`;
+  const from = shownPct.get(b.id) ?? 0;
+  return `<div class="meter" title="${qty(b.consumed)} of ${qty(b.quantity)} ${esc(b.unit)} used before it goes off">
+    <div class="bar"><div class="fill ${cls}" data-id="${esc(b.id)}" data-pct="${Math.max(2, Math.min(100, pct))}" style="width:${from}%"></div></div><b>${pct}%</b></div>`;
 }
 
 function renderInventory() {
-  const q = $("f-search").value.trim().toLowerCase();
-  const storage = $("f-storage").value;
-  const status = $("f-status").value;
+  const q = ui.q.trim().toLowerCase();
   const rows = state.inventory
     .filter((b) => !q || b.ingredient.toLowerCase().includes(q) || b.supplier.toLowerCase().includes(q))
-    .filter((b) => !storage || b.storage === storage)
-    .filter((b) => (status === "risk" ? b.dailyUse > 0 && b.pctUsedBeforeExpiry < 90 : !status || b.status === status))
+    .filter((b) => !ui.storage || b.storage === ui.storage)
+    .filter((b) => (ui.status === "risk" ? b.dailyUse > 0 && b.pctUsedBeforeExpiry < 90 : !ui.status || b.status === ui.status))
     .sort((a, b) => a.expiryDate.localeCompare(b.expiryDate) || a.ingredient.localeCompare(b.ingredient));
 
-  $("inv-empty").hidden = state.inventory.length > 0;
+  $("inv-empty").hidden = rows.length > 0;
+  $("inv-empty").textContent = state.inventory.length
+    ? "Nothing matches. Try another filter."
+    : "Nothing here yet. Add a receipt and your stock appears here.";
+
   $("inventory").innerHTML = rows
     .map((b) => {
       const statusPill =
         b.status === "incoming"
-          ? `<span class="pill info">${b.late ? "Late" : "On its way"}</span>`
+          ? `<span class="pill info">${b.late ? "Late" : "On its way"}</span><div class="sub">Arrives ${shortDate(b.arrivalDate)}</div>`
           : b.expired
-            ? `<span class="pill bad">Expired</span>`
-            : `<span class="pill good">In stock</span>`;
+            ? `<span class="pill bad">Gone off</span><div class="sub">Came ${shortDate(b.arrivalDate)}</div>`
+            : `<span class="pill good">In stock</span><div class="sub">Came ${shortDate(b.arrivalDate)}</div>`;
       const flagged = b.issues?.length ? `<span class="issue">${esc(b.issues[0].text)}</span>` : "";
-      const expires = `${shortDate(b.expiryDate)}<div class="sub">${b.expirySource === "printed" ? "printed" : "estimated"} · ${relDays(b.daysToExpiry)}</div>`;
-      const arrives = b.status === "incoming" ? `${shortDate(b.arrivalDate)}<div class="sub">${relDays(diffFromToday(b.arrivalDate))}</div>` : `<span class="sub">Arrived ${shortDate(b.arrivalDate)}</span>`;
+      const useBy = `${shortDate(b.expiryDate)}<div class="sub">${relDays(b.daysToExpiry)}${b.expirySource === "printed" ? "" : " (est.)"}</div>`;
       const waste = b.dailyUse && b.wasteQty > 0 ? `${qty(b.wasteQty)} ${esc(b.unit)}<div class="sub">${gbp(b.wasteValue)}</div>` : `<span class="sub">—</span>`;
       return `<tr class="${b.expired ? "expired" : ""}">
-        <td><strong>${esc(b.ingredient)}</strong><div class="sub">${esc(b.supplier)}</div>${flagged}</td>
-        <td>${statusPill}</td>
-        <td class="num">${qty(b.quantity)} ${esc(b.unit)}</td>
+        <td class="ingredient"><strong>${esc(b.ingredient)}</strong><div class="sub">${esc(b.supplier)}</div>${flagged}</td>
+        <td class="nowrap">${statusPill}</td>
+        <td class="num">${qty(b.quantity)} ${esc(b.unit)}<div class="sub">${gbp(b.unitPrice)} a ${esc(b.unit === "each" ? "piece" : b.unit)}</div></td>
         <td class="num">${b.status === "incoming" ? `<span class="sub">—</span>` : `${qty(b.leftNow)} ${esc(b.unit)}`}</td>
-        <td class="num">${gbp(b.unitPrice)}<div class="sub">per ${esc(b.unit)}</div></td>
-        <td>${arrives}</td>
-        <td>${expires}</td>
-        <td>${esc(b.storage)}</td>
-        <td class="num"><input class="use-input" type="number" min="0" step="any" value="${b.dailyUse}" data-use="${esc(b.ingredient)}" aria-label="Daily use of ${esc(b.ingredient)} in ${esc(b.unit)}"></td>
+        <td class="nowrap">${useBy}</td>
+        <td class="nowrap"><span class="store"><i style="background:${storageColour(b.storage)}"></i>${esc(b.storage)}</span></td>
+        <td class="num"><input class="use-input" type="number" min="0" step="any" value="${b.dailyUse}" data-use="${esc(b.ingredient)}" aria-label="How much ${esc(b.ingredient)} you use a day, in ${esc(b.unit)}"></td>
         <td>${meterHtml(b)}</td>
         <td class="num">${waste}</td>
       </tr>`;
     })
     .join("");
+
+  // Grow each bar from where it was to where it is now.
+  const fills = [...$("inventory").querySelectorAll(".fill")];
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() =>
+      fills.forEach((f, i) => {
+        if (!reduceMotion && firstRender) f.style.transitionDelay = `${Math.min(i * 25, 500)}ms`;
+        f.style.width = f.dataset.pct + "%";
+        shownPct.set(f.dataset.id, Number(f.dataset.pct));
+      }),
+    ),
+  );
 }
 
 function diffFromToday(iso) {
@@ -169,8 +249,8 @@ function diffFromToday(iso) {
 }
 
 // ---------- uploads ----------
-// Phone photos are often 4000px+ and several MB; shrink them before upload so they stay
-// under Claude's image limit and upload fast. Claude reads receipts fine at 2000px.
+// Phone photos are often 4000px+ and several MB. Shrink them before upload so they stay
+// under Claude's image limit and upload fast; receipts read fine at 2000px.
 async function shrinkImage(file) {
   if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return file;
   try {
@@ -188,62 +268,81 @@ async function shrinkImage(file) {
   }
 }
 
-function showProgress(items) {
-  $("progress").innerHTML = items
-    .map((i) =>
-      i.pending
-        ? `<div><span class="spinner"></span>Reading ${esc(i.fileName)}…</div>`
-        : i.ok
-          ? `<div class="ok">✓ ${esc(i.fileName)} added</div>`
-          : `<div class="err">${esc(i.fileName)}: ${esc(i.error)}</div>`,
-    )
-    .join("");
+function setBusy(n) {
+  const drop = $("drop");
+  drop.classList.toggle("busy", n > 0);
+  $("drop-title").innerHTML = n > 0 ? `<span class="spinner"></span>&nbsp; Reading ${n} ${n === 1 ? "receipt" : "receipts"}…` : "Drop receipts here";
+  $("drop-sub").textContent = n > 0 ? "Claude is reading each line and checking it against your emails" : "or click to choose up to 10 photos or PDFs";
+}
+
+function announce(results) {
+  for (const r of results) {
+    if (!r.ok) {
+      toast(r.error === "Already uploaded" ? "Already added" : "Couldn't add receipt", r.error === "Already uploaded" ? `${r.fileName} is already in your receipts.` : `${r.fileName}: ${r.error}`, r.error === "Already uploaded" ? "" : "bad");
+      continue;
+    }
+    const rec = state.receipts.find((x) => x.id === r.receiptId);
+    const name = rec?.extraction.supplier ?? r.fileName;
+    const issues = rec ? rec.lines.filter((l) => l.issues.length).length + rec.missingFromReceipt.length : 0;
+    const body =
+      r.status === "verified"
+        ? `${rec.lines.length} items added. Everything matches the email.`
+        : r.status === "unverified"
+          ? `${rec.lines.length} items added. No order email to check it against.`
+          : `${issues} ${issues === 1 ? "line doesn't" : "lines don't"} match the email.`;
+    toast(`${name} added`, body, r.status === "discrepancies" ? "" : "");
+  }
 }
 
 async function uploadFiles(fileList) {
   const files = [...fileList].slice(0, 10);
   if (!files.length) return;
-  showProgress(files.map((f) => ({ fileName: f.name, pending: true })));
+  setBusy(files.length);
   const form = new FormData();
   for (const f of await Promise.all(files.map(shrinkImage))) form.append("files", f, f.name);
   try {
     const { results, state: next } = await api("/api/receipts", { method: "POST", body: form });
-    showProgress(results);
     update(next);
+    announce(results);
   } catch (err) {
-    showProgress(files.map((f) => ({ fileName: f.name, ok: false, error: err.message })));
+    toast("Couldn't upload", err.message, "bad");
+  } finally {
+    setBusy(0);
+    loadSamples();
   }
 }
 
 async function addSamples(names) {
-  showProgress(names.map((n) => ({ fileName: n, pending: true })));
-  const results = [];
-  for (const n of names) {
+  if (!names.length) return;
+  for (let i = 0; i < names.length; i++) {
+    setBusy(names.length - i);
     try {
-      const { results: r, state: next } = await api(`/api/samples/${encodeURIComponent(n)}`, { method: "POST" });
-      results.push(...r);
+      const { results, state: next } = await api(`/api/samples/${encodeURIComponent(names[i])}`, { method: "POST" });
       update(next);
+      announce(results);
     } catch (err) {
-      results.push({ fileName: n, ok: false, error: err.message });
+      toast("Couldn't add sample", err.message, "bad");
     }
-    showProgress([...results, ...names.slice(results.length).map((x) => ({ fileName: x, pending: true }))]);
   }
+  setBusy(0);
   loadSamples();
 }
 
 async function loadSamples() {
   const samples = await api("/api/samples");
+  const label = (f) => f.replace(/\.\w+$/, "").replace(/-/g, " ").replace(/^\w/, (c) => c.toUpperCase());
   $("samples").innerHTML = samples
     .map(
       (s) => `<li>
-        ${s.mimeType === "application/pdf" ? `<a class="thumb" href="${esc(s.url)}" target="_blank" rel="noopener">PDF</a>` : `<a href="${esc(s.url)}" target="_blank" rel="noopener"><img src="${esc(s.url)}" alt="" loading="lazy"></a>`}
-        <span class="name">${esc(s.file)}</span>
-        <button class="btn small" data-sample="${esc(s.file)}" ${s.uploaded ? "disabled" : ""}>${s.uploaded ? "Added" : "Add"}</button>
+        ${s.mimeType === "application/pdf" ? `<a class="thumb" href="${esc(s.url)}" target="_blank" rel="noopener">PDF</a>` : `<a href="${esc(s.url)}" target="_blank" rel="noopener"><img class="thumb" src="${esc(s.url)}" alt="Sample receipt ${esc(label(s.file))}" loading="lazy"></a>`}
+        <span class="name">${esc(label(s.file))}<small>${s.mimeType === "application/pdf" ? "PDF invoice" : s.file.includes("photo") ? "Phone photo" : "Receipt scan"}</small></span>
+        <button class="btn" data-sample="${esc(s.file)}" ${s.uploaded ? "disabled" : ""}>${s.uploaded ? "Added" : "Add"}</button>
       </li>`,
     )
     .join("");
-  $("all-samples").disabled = samples.every((s) => s.uploaded);
-  $("all-samples").dataset.names = JSON.stringify(samples.filter((s) => !s.uploaded).map((s) => s.file));
+  const remaining = samples.filter((s) => !s.uploaded).map((s) => s.file);
+  $("all-samples").disabled = !remaining.length;
+  $("all-samples").dataset.names = JSON.stringify(remaining);
 }
 
 function update(next, { broadcast = true } = {}) {
@@ -271,10 +370,13 @@ $("samples").addEventListener("click", (e) => {
 });
 $("all-samples").addEventListener("click", (e) => addSamples(JSON.parse(e.currentTarget.dataset.names || "[]")));
 
-$("receipts").addEventListener("click", async (e) => {
+$("receipt-list").addEventListener("click", async (e) => {
   const btn = e.target.closest("[data-delete]");
   if (!btn) return;
-  update(await api(`/api/receipts/${encodeURIComponent(btn.dataset.delete)}`, { method: "DELETE" }));
+  const card = btn.closest(".receipt");
+  card.classList.add("leave");
+  const next = await api(`/api/receipts/${encodeURIComponent(btn.dataset.delete)}`, { method: "DELETE" });
+  setTimeout(() => update(next), reduceMotion ? 0 : 250);
   loadSamples();
 });
 
@@ -290,16 +392,34 @@ $("inventory").addEventListener("change", async (e) => {
       }),
     );
   } catch (err) {
-    alert(err.message);
+    toast("Couldn't save", err.message, "bad");
   }
 });
 
-["f-search", "f-storage", "f-status"].forEach((id) => $(id).addEventListener("input", renderInventory));
+$("f-status").addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-status]");
+  if (!btn) return;
+  ui.status = btn.dataset.status;
+  $("f-status").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+  renderInventory();
+});
+$("f-search").addEventListener("input", (e) => {
+  ui.q = e.target.value;
+  renderInventory();
+});
+$("side-storage").addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-storage]");
+  if (!btn) return;
+  ui.storage = btn.dataset.storage;
+  renderSidebarStorage();
+  renderInventory();
+  $("stock").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+});
 
 $("reset").addEventListener("click", async () => {
-  if (!confirm("Remove all receipts and usage changes?")) return;
+  if (!confirm("Remove all receipts and go back to an empty kitchen?")) return;
+  seenReceipts.clear();
   update(await api("/api/reset", { method: "POST" }));
-  $("progress").innerHTML = "";
   loadSamples();
 });
 
@@ -313,11 +433,10 @@ channel?.addEventListener("message", async () => update(await api("/api/state"),
     if (!s.ai.hasKey && !s.ai.forceDemo) {
       const b = $("banner");
       b.hidden = false;
-      b.textContent =
-        "No Anthropic API key is set, so the sample receipts use results Claude would give for them. To read your own receipts, restart the server with ANTHROPIC_API_KEY set.";
+      b.textContent = "Claude isn't connected yet, so only the sample receipts can be read. To read your own, restart LarderCheck with an Anthropic API key.";
     }
     await loadSamples();
   } catch (err) {
-    $("subtitle").textContent = "Couldn't reach the server: " + err.message;
+    $("lede").textContent = "LarderCheck can't reach its server. Check it's running, then reload. (" + err.message + ")";
   }
 })();
