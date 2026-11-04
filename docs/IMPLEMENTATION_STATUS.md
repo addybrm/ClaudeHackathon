@@ -93,3 +93,31 @@ The audit was run before the v2 work.
 ## 7. Roadmap
 
 POS integration for sales; scanned-PDF OCR; e-mail alerts (e.g. Resend); Sentry; Supabase or Postgres with auth and tenant isolation; stock counts and inventory valuation; labour costing; PDF reports; supplier e-mail price-match requests; mobile waste-logging PWA.
+
+
+## 8. UI redesign and integration pass (2026-11-04, second round)
+
+Checkpoint before this work: git tag `checkpoint/pre-redesign-2` (commit `99df0b0`).
+
+**Delivered.** New forest-green design system (`src/styles.css`); `src/` split into `api.ts`, `shell.tsx`, `ui.tsx`, `hooks.ts` and one file per page in `src/pages/`. The backend and API contract were not changed.
+
+| Module | Now connected to the backend | Notes |
+|---|---|---|
+| Overview | dashboard, trend, alerts, price changes, menu, report recommendations | Period and location filters in the top bar; summary line, KPIs, actions, supplier changes, declining dishes, alerts |
+| Menu Intelligence | menu, ingredients, create/update/archive | Sortable table, recipe cost breakdown, cost trend, editable recipes with live margin preview |
+| Supplier Intelligence | price-changes, comparison, suppliers, price history | Per-ingredient history and per-dish weekly impact |
+| Profit Leakage | leakage, alerts | Cause, affected dishes and impact per driver; formulas shown |
+| Food Waste | waste (read and write), ingredients | Saved to the backend (was session-only); offline keeps a session log |
+| AI Advisor | advisor | Structured answers, scenario card, provider label on every reply |
+| Forecasting | forecast, simulate | Outlook chart (dashed projections), multi-adjustment simulator; offline keeps the single-dish what-if |
+| Reports | reports, download | Report sheet, Markdown download, print |
+| Invoices | upload, confirm, list, suppliers, ingredients | Draft, editable review with validation, confirm and save (FR4 complete); manual entry |
+| Settings / auth | auth/login, me, locations, health | Login (modal and gate when the server requires it), role-based buttons, sign out |
+
+**Requirement changes.** FR4 (review before saving), FR15 (waste persisted), FR16 (report download), FR17 (simulation in the UI), FR18 (location selector), FR1 (login UI) move from Partial to **Implemented in the UI**.
+
+**Demo vs live.** A permanent top-bar pill reads "Live API · fictional data", "Live data" or "Offline sample". Offline mode adds a warning banner, and offline figures are a fixed illustration.
+
+**Verified this round:** `npm run build` passes (tsc strict); backend tests 22 passed; API contract tests (`tests/`) 23 passed; QA financial tests (`qa/`) 15 passed. The stale v1 invoice tests were rewritten for contract v2 and now use an isolated database.
+
+**Not verified (be honest in the demo):** buttons, forms and dialogs were not click-tested in a browser (headless screenshots only). Not exercised end to end: invoice confirm, waste submit, recipe edit, login and role restrictions, report download. Live Claude is untested. Tablet and mobile were checked on the Overview only.

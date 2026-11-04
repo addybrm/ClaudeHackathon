@@ -172,3 +172,24 @@ ingredients, missing prices, negative quantities, and zero selling price.
 Persist recipes, price histories, invoices, and waste events behind the same
 contract; retain deterministic calculation tests as regression gates and add
 authenticated, tenant-isolated storage.
+
+
+---
+
+## Update 2026-11-04 (redesign and integration pass)
+
+| Check | Result |
+|---|---|
+| `npm run build` | PASS |
+| `backend/tests` | 22 passed |
+| `tests/` (API contract v2, previously 2 failing on stale v1 assumptions; rewritten, isolated temp DB) | 23 passed |
+| `qa/` financial tests | 15 passed |
+| Visual check, desktop 1360 px (headless Edge, live backend): Overview, Menu, Suppliers, Leakage, Waste, Advisor | rendered correctly |
+| Visual check, 500 px: Overview | rendered correctly |
+| Forecasting, Reports, Settings, Invoices screenshots | captured but **not reviewed** |
+| Click-through of buttons, forms, filters, dialogs, login, roles | **NOT DONE** |
+| Tablet and mobile on pages other than Overview | **NOT DONE** |
+
+Defects found and fixed during this pass: an infinite data-refresh loop (a new object was stored on every load), desktop showing the mobile menu and close buttons, and unequal panel heights on the Overview.
+
+Open items for QA (Copilot): manual walkthrough of every route and workflow at 375, 768 and 1360 px; invoice confirm with CSV, PDF and image; waste submit; recipe edit and archive; login for each role and the restrictions on writes; report download; the offline fallback (stop the backend and reload).
